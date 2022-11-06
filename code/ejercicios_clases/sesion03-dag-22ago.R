@@ -57,3 +57,12 @@ plot(g3)
 # Mejorar formato con librería "rethinking"
 
 drawdag(g3, col_labels= "blue", col_arrow = "red")
+
+# Funciones adicionales de dagitty que me muestran las relaciones.
+# Quienes lo causan.
+parents(g3, "Aprendizaje") #variables que tienen efecto DIRECTO
+ancestors(g3, "Aprendizaje") #variables que tienen algún tipo de efecto
+# a quién causa
+children(g3, "Cámara") #variables causadas de manera inmediata
+descendants(g3, "Cámara") #variables causadas de cualquier tipo
+
