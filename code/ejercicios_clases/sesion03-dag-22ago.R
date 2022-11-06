@@ -2,6 +2,7 @@
 # Taller 01.
 
 library("dagitty")
+library("rethinking")
 
 # La idea del paquete es construir DAGs
 # cómo se relacionan los nodos a partir de las flechas
@@ -55,3 +56,4 @@ plot(g3)
 
 # Mejorar formato con librería "rethinking"
 
+drawdag(g3, col_labels= "blue", col_arrow = "red")
