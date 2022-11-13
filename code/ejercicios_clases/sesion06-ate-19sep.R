@@ -7,6 +7,10 @@ attach(lalonde) #Añade datos a R reading path, permite llamar variables con su 
 View(lalonde)
 
 #Calculamos estimador para el efecto del tratamiento t_gorro = yt_gorro - yc_gorro
-mean(re78[treat==1]) - mean(re78[treat==0]) # estimador de Neymann
+mean(re78[treat==1]) - mean(re78[treat==0]) # estimador de Neyman
 
 # Pero queremos probar si el efecto es significativo o no (H0 = t_gorro = 0 vs H1 = t_gorro =! 0)
+# Con el cálculo de la varianza de Neyman. Fórmula de Varianza
+var(re78[treat==1])/length(re78[treat==1]) + var(re78[treat==0])/length(re78[treat==0])
+
+
