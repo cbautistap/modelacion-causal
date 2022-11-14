@@ -2,7 +2,7 @@
 
 library(Matching)
 library(stargazer)
-library(devtools)
+library(devtools) # sirve para poder leer problema desde RCT
 library(RCT)
 
 data(lalonde)
@@ -77,3 +77,10 @@ t.test(
 # prueba de significancia conjunta (prueba F)
 mlp <- lm(treat ~ age + educ + black)
 stargazer(mlp, type="text")
+
+
+# Paquete RCT
+
+variables <- data.frame(age, educ, black, hisp, married, nodegr, treat)
+tabla1 <- summary_statistics(variables)
+stargazer(as.data.frame(tabla1), type="text", summary = FALSE)
