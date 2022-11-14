@@ -51,7 +51,7 @@ g3 <- dagitty('dag{
               "Dinamismo" -> "Atención"
               "Conexión" -> "Participación"
 }')
-
+ 
 plot(g3)
 
 # Mejorar formato con librería "rethinking"
