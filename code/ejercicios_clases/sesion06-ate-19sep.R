@@ -107,3 +107,10 @@ stargazer(as.data.frame(tabla3$F_test), type = "text", summary = FALSE)
 # k = grados de libertad
 # F_critical = valor crítico
 # pvalue
+# Nota debe de coincidir con lo estimado con el método anterior (es el mismo modelo)
+
+# Efecto tratamiento con controles
+reg3 <- lm(re78 ~ treat+black) #
+stargazer(reg1, reg3, type="text", summary = FALSE) # Comparamos reg3 con reg1
+# Resultado. COEFICIENTE de black sí es significativo. Anteriormente no lo habíamos identificado
+# además, cambia el coeficiente de treat
