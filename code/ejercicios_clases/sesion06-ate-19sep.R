@@ -114,3 +114,13 @@ reg3 <- lm(re78 ~ treat+black) #
 stargazer(reg1, reg3, type="text", summary = FALSE) # Comparamos reg3 con reg1
 # Resultado. COEFICIENTE de black sí es significativo. Anteriormente no lo habíamos identificado
 # además, cambia el coeficiente de treat
+
+#Efecto de tratamiento con INTERACCIÓN
+# se puede diferenciar el efecto de uno de los controles con la inclusión de una variable con interacción
+reg4 <- lm(re78 ~ treat+black+I(treat*black)) #nota interacción genera cambio de pendiente cuando ocurren las dos
+stargazer(reg4, type="text", summary = FALSE)
+
+# o bien, transformando respecto a su media a la dicotómica de control
+reg5 <- lm(re78 ~ treat+I(black-mean(black)) # I() es la indicadora que permite hacer operación que marcas
+           +I(treat*(black-mean(black))))
+stargazer(reg5, type = "text", summary = FALSE)
