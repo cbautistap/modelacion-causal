@@ -28,14 +28,45 @@ c(mean(age[treat==1]), mean(age[treat==0])) # esperamos que sean iguales..
 # si no son significativamente diferentes, aleatorización bien hecha.
 
 # Prueba de hipótesis que permite comparar ambas medias:
+# para variable age:
 t.test(
   x = age[treat==1],
   y = age[treat==0],
   alternative = "two.sided",
   mu = 0,
   var.equal = FALSE,
-  conf.level = 0.95)
-)
+  conf.level = 0.95) # p-value no significativo. ESO ESPERAMOS!
 
+# hacemos lo mismo pero para otros controles. Ej variable educ
+t.test(
+  x = educ[treat==1],
+  y = educ[treat==0],
+  alternative = "two.sided",
+  mu = 0,
+  var.equal = FALSE,
+  conf.level = 0.95)  # p-value no significativo. ESO ESPERAMOS!
+# ADEMÁS, valor de H0 = 0 cae dentro del intervalo
 
- 
+# Control black
+t.test(
+  x = black[treat==1],
+  y = black[treat==0],
+  alternative = "two.sided",
+  mu = 0,
+  var.equal = FALSE,
+  conf.level = 0.95)  # p-value no significativo. ESO ESPERAMOS!
+# ADEMÁS, valor de H0 = 0 cae dentro del intervalo
+
+# Control black
+t.test(
+  x = hisp[treat==1],
+  y = hisp[treat==0],
+  alternative = "two.sided",
+  mu = 0,
+  var.equal = FALSE,
+  conf.level = 0.95)  # p-value no significativo, pero apenitas pvalue = 0.064.
+# En hispanos, lo que pasa es una prueba muy pequeña
+# ADEMÁS, valor de H0 = 0 cae dentro del intervalo
+
+# POR LO TANTO, podemos decir que aleatorización fue adecuada, como lo acabamos de probar.
+
