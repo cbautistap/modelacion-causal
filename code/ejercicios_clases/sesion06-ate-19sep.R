@@ -68,5 +68,10 @@ t.test(
 # En hispanos, lo que pasa es una prueba muy pequeña
 # ADEMÁS, valor de H0 = 0 cae dentro del intervalo
 
+
 # POR LO TANTO, podemos decir que aleatorización fue adecuada, como lo acabamos de probar.
 
+# Prueba F en MLP
+# prueba de significancia conjunta (prueba F)
+mlp <- lm(treat ~ age + educ + black)
+stargazer(mlp, type="text")
