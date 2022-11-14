@@ -1,5 +1,6 @@
+# Sesión 07 (clase presencial). ATE Bajo estratificación
+# Ejercicio con datos titanic.
 
-#Sesión 07. Ejercicios de clase
 
 library(tidyverse)
 library(dagitty)
