@@ -119,8 +119,19 @@ stargazer(reg1, reg3, type="text", summary = FALSE) # Comparamos reg3 con reg1
 # se puede diferenciar el efecto de uno de los controles con la inclusión de una variable con interacción
 reg4 <- lm(re78 ~ treat+black+I(treat*black)) #nota interacción genera cambio de pendiente cuando ocurren las dos
 stargazer(reg4, type="text", summary = FALSE)
+#Resultado. ESPERARÍA NO VER INTERACCIONES SIGNIFICATIVAS.
+# Al no ser la interacción significativa, es otra forma de verificar que 
+#tratamiento no está modificándose cuando ocurre black
+
 
 # o bien, transformando respecto a su media a la dicotómica de control
 reg5 <- lm(re78 ~ treat+I(black-mean(black)) # I() es la indicadora que permite hacer operación que marcas
            +I(treat*(black-mean(black))))
 stargazer(reg5, type = "text", summary = FALSE)
+# Nota. Esta transformación es útil porque permite interpretar resultado respecto a unidades de
+# desviación de la media. Nos permiten medir el efecto, qué tantas veces respecto de su media se va a
+# modificar la variable de respuesta ante cambios en la independiente específica. Black tiene media cero
+# estandarizar en media cero permite identificar más facil.
+# En resultado. Coeficientes de interacción son los mismos, cambia el de la constante
+# Resultado. Variables
+# Resultado, 
