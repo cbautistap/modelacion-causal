@@ -132,6 +132,10 @@ stargazer(reg5, type = "text", summary = FALSE)
 # desviación de la media. Nos permiten medir el efecto, qué tantas veces respecto de su media se va a
 # modificar la variable de respuesta ante cambios en la independiente específica. Black tiene media cero
 # estandarizar en media cero permite identificar más facil.
-# En resultado. Coeficientes de interacción son los mismos, cambia el de la constante
-# Resultado. Variables
-# Resultado, 
+# En resultado. Coeficientes de interacción son los mismos, cambia el de la constante.
+
+# Conclusión de qué pasa con variable black
+# Cuando tienes un individuo que es parte de grupo black, el efecto de tratamiento es diferenciado
+# no debería pasar eso para que se cumplan los supuestos. Sí hay un efecto diferenciado para
+# Por lo tanto, variable black sí modifica el efecto del tratamiento. 
+# EFECTO DE TRATAMIENTO EXISTE, PERO EFECTO DE TRATAMIENTO SÍ ES DIFERENCIADO
