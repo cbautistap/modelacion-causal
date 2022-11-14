@@ -95,4 +95,15 @@ stargazer(as.data.frame(tabla), type="text", summary = FALSE)
 #Mismo ejercicio con balance regression
 tabla3 <- balance_regression(variables, treatment = "treat")
 stargazer(as.data.frame(tabla3$regression_tables), type = "text", summary = FALSE)
-# solo nodegr es significativo para el tratamiento (pvalue=0.006)
+# solo nodegr es significativo para el tratamiento (pvalue=0.006).
+# como "nodegr" es significativa, podemos hacer 1) prueba de robustez para ver qué pasó
+# 2) si con prueba de robustez confirmamos que sí es significativo, 
+# estimar regresión de efecto causal con control (es control que dejas en el modelo)
+# Nota. El intercepto es LA PROPORCIÓN DE NO TRATADOS. (promedio de variable dependiente)
+
+# También podemos acceder a prueba F
+stargazer(as.data.frame(tabla3$F_test), type = "text", summary = FALSE)
+# F es el de la significancia conjunta. SIRVE PARA VERIFICAR SI ALEATORIZACIÓN DEPENDE O NO DE LOS CONTROLES
+# k = grados de libertad
+# F_critical = valor crítico
+# pvalue
