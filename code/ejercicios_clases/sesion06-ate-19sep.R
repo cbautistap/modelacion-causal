@@ -84,3 +84,8 @@ stargazer(mlp, type="text")
 variables <- data.frame(age, educ, black, hisp, married, nodegr, treat)
 tabla1 <- summary_statistics(variables)
 stargazer(as.data.frame(tabla1), type="text", summary = FALSE)
+
+# paquete trae función de tabla de balance:
+tabla <- balance_table(variables, treatment = "treat")
+stargazer(as.data.frame(tabla), type="text", summary = FALSE)
+# vemos que se obtienen los mismos resultados que antes con t.test()
