@@ -89,3 +89,10 @@ stargazer(as.data.frame(tabla1), type="text", summary = FALSE)
 tabla <- balance_table(variables, treatment = "treat")
 stargazer(as.data.frame(tabla), type="text", summary = FALSE)
 # vemos que se obtienen los mismos resultados que antes con t.test()
+
+# Ojo. Variable "nodegr" sí tiene significancia (pvalue pequeño), sí influye en el tratamiento. 
+
+#Mismo ejercicio con balance regression
+tabla3 <- balance_regression(variables, treatment = "treat")
+stargazer(as.data.frame(tabla3$regression_tables), type = "text", summary = FALSE)
+# solo nodegr es significativo para el tratamiento (pvalue=0.006)
