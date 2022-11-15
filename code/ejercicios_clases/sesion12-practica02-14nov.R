@@ -12,5 +12,10 @@ View(CollegeDistance)
 
 # 2. Obtener descripción general del conjunto de datos
 summary(CollegeDistance)
+# Histograma para visualizar distancia
+hist(distance)
 
-# obtene
+
+# 3. Estime dos regresiones no confiables
+# 3.1 
+lwage 
