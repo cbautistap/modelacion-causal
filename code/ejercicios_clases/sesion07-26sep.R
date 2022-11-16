@@ -24,3 +24,5 @@ g <- dagitty('dag{
 drawdag(g, col_labels="blue", col_arrow="red", lwd=1.5, cex=1.2)
 
 titanic <- read_dta("data/titanic.dta")
+attach(titanic)
+View(titanic)
