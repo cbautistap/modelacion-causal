@@ -10,6 +10,7 @@ library(rethinking)
 #install.packages("haven")
 library("haven")
 library("magrittr")
+library("stargazer")
 
 g <- dagitty('dag{
              "Mujer" [pos="1,0.5"]
@@ -26,3 +27,23 @@ drawdag(g, col_labels="blue", col_arrow="red", lwd=1.5, cex=1.2)
 titanic <- read_dta("data/titanic.dta")
 attach(titanic)
 View(titanic)
+
+# Iniciamos estimando controlando solo por la clase en qué viajaba el pasajero
+titanic <- titanic %>% mutate(d = case_when(class == 1 ~ 1, TRUE ~ 0)) # TRUE forces case_when to output the
+                                                            # "else-output-value", if none of the
+                                                            # previous conditions were TRUE.
+                                                            # formula for everything else.
+distinct(titanic, d)
+
+# Obtenemos el estimador con la diferencia de medias.
+# DOS FORMAS DE HACERLO
+# 1. CBP
+mean(titanic$survived[titanic$d == 1])
+mean(titanic$survived[titanic$d == 0])
+# 2. TIDYVERSE
+ey1 <- titanic %>% filter(d == 1) %>% 
+        pull(survived) %>% mean()
+ey0 <- titanic %>% filter(d==0) %>% 
+        pull(survived) %>% mean()
+gate <- ey1 - ey0
+print(gate)
