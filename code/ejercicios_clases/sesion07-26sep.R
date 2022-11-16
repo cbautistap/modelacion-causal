@@ -51,7 +51,8 @@ print(gate)
  # de sobrevivir aumentaba en un 35.38%. Sin embargo, esta estimación del ATE está
  # sesgada, pues no hemos controlado por otros determinantes como edad y género
 
-# 2. Estratificamos los datos en cuatro grupos
+# II. Estratificación.
+# 1. Estratificamos los datos en cuatro grupos
 # g1: niños hombres, g2: niñas mujeres, g3: adultos hombre, g4: adultas mujeres
 titanic <- titanic %>% 
   mutate(s = case_when(sex == 0 & age == 1 ~ 1,
@@ -60,3 +61,30 @@ titanic <- titanic %>%
                        sex == 1 & age == 0 ~ 4,
                        TRUE ~ 0))
 distinct(titanic, s)
+
+# 2. Calculamos diferencia de probabilidades de supervivencia para cada grupo
+# 2.a Probabilidades de sobrevivencia para cada grupo
+ey11 <- titanic %>% filter(s == 1 & d == 1) %>% #grupo 1 y clase alta
+  pull(survived) %>% mean()
+ey10 <- titanic %>% filter(s == 1 & d == 0) %>% #grupo 1 y clase no alta
+  pull(survived) %>% mean()
+ey21 <- titanic %>% filter(s == 2 & d == 1) %>% 
+  pull(survived) %>% mean()
+ey20 <- titanic %>% filter(s == 2 & d == 0) %>% 
+  pull(survived) %>% mean()
+ey31 <- titanic %>% filter(s == 3 & d == 1) %>%
+  pull(survived) %>% mean()
+ey30 <- titanic %>% filter(s==3 & d==0) %>% 
+  pull(survived) %>% mean()
+ey41 <- titanic %>% filter(s == 4 & d ==1) %>% 
+  pull(survived) %>% mean()
+ey40 <- titanic %>% filter(s == 4 & d == 0) %>% 
+  pull(survived) %>% mean()
+
+# 2.b Diferencia de probabilidad de sobrevivencia para cada grupo
+diff1 <- ey11 - ey10
+diff2 <- ey21 - ey20
+diff3 <- ey31 - ey30
+diff4 <- ey41 - ey40
+
+print(c(diff1, diff2, diff3, diff4))
