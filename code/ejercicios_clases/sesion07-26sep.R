@@ -90,5 +90,19 @@ diff4 <- ey41 - ey40
 print(c(diff1, diff2, diff3, diff4))
 
 # 3. Cálculo de Ponderadores para afinar estimación
-# Número de personas por cada grupo que no sobrevivieron y dividir por el total de cada estrato
-w1 <- length(titanic[titanic$s==1 & titanic$survived==0])/sum(titanic$s==1)
+# Número de personas por cada grupo que NO SON DE CLASE ALTA y dividir por el total
+obs_nca <- nrow(titanic %>% filter(d==0)) # total de pasajeros que NO SON CLASE ALTA
+w1 <- titanic %>% filter(s==1 & d==0) %>%  
+  nrow(.)/obs_nca #ponderador g1
+w2 <- titanic %>% filter(s==2 & d==0) %>% 
+  nrow(.)/obs_nca 
+w3 <- titanic %>% filter(s==3 & d==0) %>% 
+  nrow(.)/obs_nca
+w4 <- titanic %>% filter(s==4 & d==0) %>% nrow(.)/obs_nca
+
+# 4. Estimación de Weighted ATE
+wate <- diff1*w1 + diff2*w2 + diff3*w3 + diff4*w4
+print(wate)
+
+# III. Comparamos ATE y Weitghted ATE (estratificado)
+stargazer(gate, wate, type= "text")
