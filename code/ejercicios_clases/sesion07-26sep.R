@@ -35,7 +35,7 @@ titanic <- titanic %>% mutate(d = case_when(class == 1 ~ 1, TRUE ~ 0)) # TRUE fo
                                                             # formula for everything else.
 distinct(titanic, d)
 
-# Obtenemos el estimador con la diferencia de medias.
+# I. Obtenemos el estimador con la diferencia de medias.
 # DOS FORMAS DE HACERLO
 # 1. CBP
 mean(titanic$survived[titanic$d == 1])
@@ -47,3 +47,16 @@ ey0 <- titanic %>% filter(d==0) %>%
         pull(survived) %>% mean()
 gate <- ey1 - ey0
 print(gate)
+ # gate nos dice que haber estado como pasajero en primera clase, la probabilidad 
+ # de sobrevivir aumentaba en un 35.38%. Sin embargo, esta estimación del ATE está
+ # sesgada, pues no hemos controlado por otros determinantes como edad y género
+
+# 2. Estratificamos los datos en cuatro grupos
+# g1: niños hombres, g2: niñas mujeres, g3: adultos hombre, g4: adultas mujeres
+titanic <- titanic %>% 
+  mutate(s = case_when(sex == 0 & age == 1 ~ 1,
+                       sex == 0 & age == 0 ~ 2,
+                       sex == 1 & age == 1 ~ 3,
+                       sex == 1 & age == 0 ~ 4,
+                       TRUE ~ 0))
+distinct(titanic, s)
