@@ -88,3 +88,7 @@ diff3 <- ey31 - ey30
 diff4 <- ey41 - ey40
 
 print(c(diff1, diff2, diff3, diff4))
+
+# 3. Cálculo de Ponderadores para afinar estimación
+# Número de personas por cada grupo que no sobrevivieron y dividir por el total de cada estrato
+w1 <- length(titanic[titanic$s==1 & titanic$survived==0])/sum(titanic$s==1)
