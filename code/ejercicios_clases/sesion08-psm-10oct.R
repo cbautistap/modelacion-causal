@@ -59,10 +59,20 @@ ecls %>% group_by(catholic) %>% # mismo procedimiento que en I (solo para medias
 lapply(ecls_cov,
        function(v) {t.test(ecls[, v] ~ ecls[, 'catholic'])}) # Mismo procedimiento que I.2 para múltiples variables
 
+# OJO. Si nuestra medición fuera ideal, o experimento ALEATORIO, esperaríamos que NO haya dif en medias de covariables (no rechazar)
+# Los resultados muestran que las diferencias de medias para todas las covariables evaluadas
+# son significativas, i.e. rechazan HO: diff_cov_i = 0
 
-# III. Estime propensity score 
+# III. Estime propensity score
 # como probabilidad de recibir tratamiento dado un conjunto de covariables previas al tratamiento
+# estimar modelo en particular que permita calcular prob de ocurrencia de que 
+# la obs esté dentro del grupo de tratamiento y no en el de control
 
+# Usamos un modelo logit. Estima prob de que ocurra dicotómica dados controles
+ecls <- ecls %>% mutate(w3income_1k = w3income/1000)
+m_ps <- glm(catholic ~ race_white + w3income_1k + p5hmage + p5numpla + w3momed_hsb,
+            family = binomial(), data = ecls)
+summary(m_ps)
 # IV. Analizar región del common support (verificar que se cumpla)
 
 # V. Utilice el procedimiento de matching mediante el criterio de la vecindad más cercana
