@@ -39,3 +39,15 @@ with(ecls, t.test(c5r2mtsc_std ~ catholic))
 # vemos que la diferencia sí es estadísticamente significativa.
 # estadístico t es muy alto (valor absoluto) y por lo tanto, pvalue muy pequeño.
 # SE RECHAZA H0: diferencia en medias igual a cero.
+
+# II. Evalúe las diferencias entre medias para COVARIABLES entre grupos de tratamiento y control
+
+# t test nos ayuda a evaluar si hay equilibrio.
+# Se eligen 5 covariables: raza blanca, edad de la madre, ingresos, número de lugares donde niño ha vivido (estabilidad) en los últimos 4., nivel educación madre mayor a HS o no. 
+ecls_cov <- c('race_white', 'p5hmage', 'w3income', 'p5numpla', 'w3momed_hsb')
+# nota. Literatura ha mostrado que es más relevante EDAD de la madre
+
+ecls %>% group_by(catholic) %>% 
+  select(one_of(ecls_cov)) %>% 
+  summarise_all(funs(mean(., na.rm = T))) %>% 
+  kable()
