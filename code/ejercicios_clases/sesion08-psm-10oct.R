@@ -17,6 +17,7 @@ View(ecls)
 
 # variable resultado: puntuación de matemáticas estandarizada: "c5r2mtsc_std
 
+# I.1 calcula medias y error estándar
 ecls %>% group_by(catholic) %>% # agrupa por privadas (catholic) = 1 y públicas (non catholic) = 0
   summarise(n_students = n(), # cuenta para ambos grupos cuantos hay
             mean_math = mean(c5r2mtsc_std), # media de cada grupo
@@ -34,8 +35,8 @@ ecls %>% group_by(catholic) %>% # agrupa por privadas (catholic) = 1 y públicas
 
 # Por lo tanto, estamos omitiendo muchos factores!
 
-# I. 2. Significancia de diferencia en medias
-with(ecls, t.test(c5r2mtsc_std ~ catholic))
+# I.2. Significancia de diferencia en medias
+with(ecls, t.test(c5r2mtsc_std ~ catholic)) 
 # vemos que la diferencia sí es estadísticamente significativa.
 # estadístico t es muy alto (valor absoluto) y por lo tanto, pvalue muy pequeño.
 # SE RECHAZA H0: diferencia en medias igual a cero.
@@ -47,7 +48,25 @@ with(ecls, t.test(c5r2mtsc_std ~ catholic))
 ecls_cov <- c('race_white', 'p5hmage', 'w3income', 'p5numpla', 'w3momed_hsb')
 # nota. Literatura ha mostrado que es más relevante EDAD de la madre
 
-ecls %>% group_by(catholic) %>% 
+# II.1 calcula medias para covariables:
+ecls %>% group_by(catholic) %>% # mismo procedimiento que en I (solo para medias y sin std error), pero para MÚLTIPLES VARIABLES
   select(one_of(ecls_cov)) %>% 
   summarise_all(funs(mean(., na.rm = T))) %>% 
   kable()
+
+# II.2 se puede comprobar si las diferencias por grupo son significativas mediante la prueba
+# de hipótesis t apropiada.
+lapply(ecls_cov,
+       function(v) {t.test(ecls[, v] ~ ecls[, 'catholic'])}) # Mismo procedimiento que I.2 para múltiples variables
+
+
+# III. Estime propensity score 
+# como probabilidad de recibir tratamiento dado un conjunto de covariables previas al tratamiento
+
+# IV. Analizar región del common support (verificar que se cumpla)
+
+# V. Utilice el procedimiento de matching mediante el criterio de la vecindad más cercana
+
+# VI. Evalúe el equilibrio de covariables después del matching
+
+# VII. Estime los efectos del tratamiento sobre la variable de resultado
