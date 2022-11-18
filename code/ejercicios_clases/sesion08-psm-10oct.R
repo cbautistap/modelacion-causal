@@ -82,10 +82,46 @@ prs_df <- data.frame(pr_score=predict(m_ps, type="response"), # probabilidad cal
                   catholic = m_ps$model$catholic) #comparado con el dato real
 
 head(prs_df)
+# nota. Hay disparidades, ya que de acuerdo con características que yo dije (controles) qué prob. hay de que estén en grupo T
+# Ej. Obs 4 y 5 tienen probabilidades similares y están en grupos distintos
+# Ej. Obs 6 probabilidad alta pero no está en T
 
 # IV. Analizar región del common support (verificar que se cumpla)
+# graficamos histograma para el grupo de tratamiento y control
+labs <- paste("Actual school type attended:",
+              c("Catholic", "Public"))
+labs
+prs_df %>% 
+  mutate(catholic=ifelse(catholic==1, labs[1], labs[2])) %>% 
+  ggplot(aes(x = pr_score)) +
+  geom_histogram(color='white') +
+  facet_wrap(~catholic) +
+  xlab("Probability of going to Catholic school") +
+  theme_bw()
 
-# V. Utilice el procedimiento de matching mediante el criterio de la vecindad más cercana
+# Vemos que distribuciones son muy distintas. Los que van a escuela pública tenían muy pocas prob de ir a escuela pública (<.20)
+# Sin embargo, esperaríamos que hist de escuela privada estuviera más sesgado hacia la izq. (más observaciones en la derecha)
+# modelo logit no lo hace de manera perfecta, pero muchos sí están clasificados correctamente (lado derecho)
+
+# Se cumple condificón de COMMON SUPPORT, i.e. ambas tienen mismo rango de probabilidades (0.0 a 0.5).
+# Si esto no pasara, nunca podríamos empatar a los individuos.
+
+# V. Utilice el procedimiento de matching mediante el criterio de la vecindad más cercana.
+
+# omitimos n.a.
+ecls_nomiss <- ecls %>% 
+  select(c5r2mtsc_std, catholic, one_of(ecls_cov)) %>% 
+  na.omit()
+
+# Utilizamos funciones propias del paquete MatchIt:
+mod_match <- matchit(catholic ~ race_white + w3income + p5hmage + p5numpla +w3momed_hsb,
+                     method = "nearest", data = ecls_nomiss)
+
+# generamos nuevo df con el resultado
+dta_m <- match.data(mod_match)
+dim(dta_m) #
+head(dta_m)
+
 
 # VI. Evalúe el equilibrio de covariables después del matching
 
