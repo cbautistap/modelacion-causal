@@ -127,6 +127,7 @@ summary(mod_match)
 
 
 # V.3 gráficamos
+plot(mod_match)
 
 # VI. Evalúe el equilibrio de covariables después del matching
 
