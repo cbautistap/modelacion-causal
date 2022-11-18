@@ -108,20 +108,25 @@ prs_df %>%
 
 # V. Utilice el procedimiento de matching mediante el criterio de la vecindad más cercana.
 
-# omitimos n.a.
+# V.0 omitimos n.a.
 ecls_nomiss <- ecls %>% 
   select(c5r2mtsc_std, catholic, one_of(ecls_cov)) %>% 
   na.omit()
 
-# Utilizamos funciones propias del paquete MatchIt:
+# V.1 Utilizamos funciones propias del paquete MatchIt:
 mod_match <- matchit(catholic ~ race_white + w3income + p5hmage + p5numpla +w3momed_hsb,
                      method = "nearest", data = ecls_nomiss)
 
 # generamos nuevo df con el resultado
 dta_m <- match.data(mod_match)
-dim(dta_m) #
+dim(dta_m) # agrega variable distance, weights y subclass
 head(dta_m)
 
+# V.2 summary
+summary(mod_match)
+
+
+# V.3 gráficamos
 
 # VI. Evalúe el equilibrio de covariables después del matching
 
