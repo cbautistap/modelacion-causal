@@ -68,11 +68,21 @@ lapply(ecls_cov,
 # estimar modelo en particular que permita calcular prob de ocurrencia de que 
 # la obs esté dentro del grupo de tratamiento y no en el de control
 
-# Usamos un modelo logit. Estima prob de que ocurra dicotómica dados controles
+# III.1 Usamos un modelo logit. Estima prob de que ocurra dicotómica dados controles
 ecls <- ecls %>% mutate(w3income_1k = w3income/1000)
 m_ps <- glm(catholic ~ race_white + w3income_1k + p5hmage + p5numpla + w3momed_hsb,
             family = binomial(), data = ecls)
 summary(m_ps)
+
+# Resultado: todos son relevantes (significativos) para determinar si van a escuela privada o no,
+# excepto "p5numpla".
+
+# III.2 Ahora estimamos el propensity score (cuánta probabiliada le predice el modelo para estar en Tratamiento)
+prs_df <- data.frame(pr_score=predict(m_ps, type="response"), # probabilidad calculada con estimadores
+                  catholic = m_ps$model$catholic) #comparado con el dato real
+
+head(prs_df)
+
 # IV. Analizar región del common support (verificar que se cumpla)
 
 # V. Utilice el procedimiento de matching mediante el criterio de la vecindad más cercana
