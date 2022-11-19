@@ -130,10 +130,16 @@ summary(mod_match)
 plot(mod_match)
 
 # VI. Evalúe el equilibrio de covariables después del matching
+#VI.1 tabla comparando medias
 dta_m %>% 
   group_by(catholic) %>% 
   select(one_of(ecls_cov)) %>% 
   summarise_all(funs(mean)) %>% 
   kable()
+
+#VI.2 Prueba estadística apropiada, esperamos ahora NO RECHAZAR HO
+lapply(ecls_cov, 
+       function(v) {t.test(dta_m[, v] ~ dta_m$catholic)})
+
 # VII. Estime los efectos del tratamiento sobre la variable de resultado
 
