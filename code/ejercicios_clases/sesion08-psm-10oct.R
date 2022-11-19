@@ -130,5 +130,10 @@ summary(mod_match)
 plot(mod_match)
 
 # VI. Evalúe el equilibrio de covariables después del matching
-
+dta_m %>% 
+  group_by(catholic) %>% 
+  select(one_of(ecls_cov)) %>% 
+  summarise_all(funs(mean)) %>% 
+  kable()
 # VII. Estime los efectos del tratamiento sobre la variable de resultado
+
