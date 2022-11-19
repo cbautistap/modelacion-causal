@@ -150,3 +150,12 @@ with(dta_m, t.test(c5r2mtsc_std ~ catholic))
 # VII.2 ATE emparejado ahora con recta de regresión (ASÍ PODEMOS CALCULAR ATE SIEMPRE)
 lm_treat1 <- lm(c5r2mtsc_std ~ catholic, data = dta_m)
 summary(lm_treat1)
+
+# coinciden coeficientes:
+# B0 = .359
+# B1 = (.359 + (-.149)) = 0.209
+
+# VII.3 ATE emparejado con controles
+lm_treat2 <- lm(c5r2mtsc_std ~ catholic + race_white + p5hmage + I(w3income/1000) +
+                  p5numpla + w3momed_hsb, data = dta_m)
+summary(lm_treat2)
