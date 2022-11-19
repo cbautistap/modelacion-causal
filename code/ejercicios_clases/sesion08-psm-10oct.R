@@ -142,4 +142,11 @@ lapply(ecls_cov,
        function(v) {t.test(dta_m[, v] ~ dta_m$catholic)})
 
 # VII. Estime los efectos del tratamiento sobre la variable de resultado
+# VII.1 Estimamos efecto de tratamiento para conjunto de matching con t.test
+with(dta_m, t.test(c5r2mtsc_std ~ catholic))
+# El efecto existe y tenemos una medición más precisa de las medias para cada grupo
+# con eso podemos identificar ATE para grupos emparejados
 
+# VII.2 ATE emparejado ahora con recta de regresión (ASÍ PODEMOS CALCULAR ATE SIEMPRE)
+lm_treat1 <- lm(c5r2mtsc_std ~ catholic, data = dta_m)
+summary(lm_treat1)
