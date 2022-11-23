@@ -35,3 +35,12 @@ summary(reg1_nc)
 
 reg2_nc <- lm(lwage ~ leduc + hispanic + afam + female + urban)
 summary(reg2_nc)
+
+# 4. Porqué se puede utilizar la distancia a la escuela como instrumento?
+
+# 5. Calcule correlaciones de la distancia del instrumento con la regresora endógena
+# y la variable dependiente del salario.
+cor.test(distance, leduc)
+cor.test(distance, lwage)
+
+# 6. 
