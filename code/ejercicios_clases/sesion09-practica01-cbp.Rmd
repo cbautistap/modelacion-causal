@@ -104,11 +104,16 @@ ps <- glm(treat ~ age + educ + black + hisp + marr + nodegree + re74_1k+
 summary(ps)
 ```
 
-Calculamos propensity score usando modelo estimado previamente
+Calculamos propensity score usando modelo estimado previamente.
+
+Observamos en los resultados que individuos con probabilidades bajas,
+menores al 30%, están clasificados en el grupo de tratamiento.
+
 ```{r}
 ps_df <- data.frame(pr_score = predict(ps, type= 'response'),
                     treat = ps$model$treat)
 head(ps_df)
+tail(ps_df)
 ```
 
 
