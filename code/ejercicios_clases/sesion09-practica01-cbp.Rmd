@@ -105,9 +105,13 @@ summary(ps)
 ```
 
 Calculamos propensity score usando modelo estimado previamente.
+El propensity score son los valores ajustados (predichos) por el modelo logit
 
 Observamos en los resultados que individuos con probabilidades bajas,
 menores al 30%, están clasificados en el grupo de tratamiento.
+Podemos afirmar que el grupo de control (CPS) ahora sufre de sesgo de selección,
+al no provenir de un diseño experimental, sino de una muestra de TODA la población.
+
 
 ```{r}
 ps_df <- data.frame(pr_score = predict(ps, type= 'response'),
@@ -140,7 +144,10 @@ cular el ATE:
 a) Weighting on the propensity score
 
 ```{r}
+# primero queremos ver si hay NAs
+sum(is.na(nsw_cps)) # no hay ninguno
 
+match_wps <- 
 ```
 
 b) Nearest-neighbor matching
