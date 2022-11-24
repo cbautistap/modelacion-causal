@@ -33,9 +33,9 @@ en Canvas y fue tomado de:
 
 https://mixtape.scunning.com/matching-and-subclassification.html
 
-**1. Revise la descripción del programa que se realiza en la Sección I y replique
+**1.** Revise la descripción del programa que se realiza en la Sección I y replique
 la Tabla 1 de la muestra utilizada por los autores para describir a su
-conjunto de datos:**
+conjunto de datos:
 
 ```{r}
 getwd()
@@ -43,8 +43,8 @@ nsw <- read_dta("data/nsw_mixtape.dta")
 attach(nsw)
 View(nsw)
 
-nsw_cov <- c("age", "educ", "black", "hisp", "marr", "nodegree", "re74", 
-             "re75", "re78")
+nsw_cov <- c('age', 'educ', 'black', 'hisp', 'marr', 'nodegree', 're74', 
+             're75', 're78')
 
 tbl1 <- nsw %>% group_by(treat) %>% 
   select(one_of(nsw_cov)) %>% 
@@ -52,9 +52,9 @@ tbl1 <- nsw %>% group_by(treat) %>%
 tbl1
 ```
 
-**2. Calcule el ATE del experimento. Deberá obtener que el efecto del NSW
+**2.** Calcule el ATE del experimento. Deberá obtener que el efecto del NSW
 job-training program sobre los ingresos reales fue un incremento de $1,794.343.
-(renglón 1 de la tabla 2).**
+(renglón 1 de la tabla 2).
 
 El ATE en este caso es la diferencia de medias entre grupo tratado y de control.
 
@@ -66,10 +66,18 @@ ate
 
 with(nsw, t.test(re78 ~ treat))
 ```
-**3. Siguiendo el procedimiento de los autores, ahora utilice la información de
+```{r}
+lapply(nsw_cov,
+       function(v) {t.test(nsw[, v] ~ nsw[, 'treat'])})
+```
+
+
+**3.** Siguiendo el procedimiento de los autores, ahora utilice la información de
 la encuesta CPS como grupo de control no experimental. Agregue este
 conjunto de datos a los datos experimentales y estime el propensity score
 usando un modelo logit.**
+
+Unimos datos de CPS
 
 ```{r}
 cps <- read_dta('data/cps_mixtape.dta')
@@ -79,6 +87,28 @@ View(cps)
 nsw_cps <- nsw %>% filter(treat == 1) %>% 
   bind_rows(cps)
 head(nsw_cps)
+```
+Estimamos propensity score para modelo logit. Recordamos que la variable 
+dependiente es la dicotómica del tratamiento y las independientes las variables
+seleccionadas.
+
+Estimamos modelo logit:
+
+```{r}
+nsw_cps <- nsw_cps %>% 
+  mutate(re74_1k = re74/1000,
+         re75_1k = re75/1000,
+         re78_1k = re78/1000)
+ps <- glm(treat ~ age + educ + black + hisp + marr + nodegree + re74_1k+
+            re75, family = binomial(), data = nsw_cps)
+summary(ps)
+```
+
+Calculamos propensity score usando modelo estimado previamente
+```{r}
+ps_df <- data.frame(pr_score = predict(ps, type= 'response'),
+                    treat = ps$model$treat)
+head(ps_df)
 ```
 
 
