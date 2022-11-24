@@ -66,5 +66,20 @@ ate
 
 with(nsw, t.test(re78 ~ treat))
 ```
+**3. Siguiendo el procedimiento de los autores, ahora utilice la información de
+la encuesta CPS como grupo de control no experimental. Agregue este
+conjunto de datos a los datos experimentales y estime el propensity score
+usando un modelo logit.**
+
+```{r}
+cps <- read_dta('data/cps_mixtape.dta')
+dim(cps)
+View(cps)
+
+nsw_cps <- nsw %>% filter(treat == 1) %>% 
+  bind_rows(cps)
+head(nsw_cps)
+```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
