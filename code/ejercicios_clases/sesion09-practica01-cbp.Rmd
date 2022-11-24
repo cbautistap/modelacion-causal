@@ -116,5 +116,24 @@ head(ps_df)
 tail(ps_df)
 ```
 
+**4.** Mediante la construcción del histograma para ambos grupos, analice la
+región del *commun support*
+
+Validamos el *commun support* con el histograma, para ambos grupos observamos
+que los valores se encuentran entre el rango [0 y 0.5]
+
+```{r}
+labs <- paste("Grupo real al que pertenece:", 
+              c("Tratamiento", "Control"))
+
+ps_df %>% 
+  mutate(treat = ifelse(treat==1, labs[1], labs[2])) %>% 
+  ggplot(aes(x = pr_score)) +
+  geom_histogram() +
+  facet_wrap(~treat) +
+  xlab("Probabilidad de formar parte del grupo de tratamiento")+
+  theme_bw()
+```
+
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
