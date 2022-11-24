@@ -134,6 +134,23 @@ ps_df %>%
   xlab("Probabilidad de formar parte del grupo de tratamiento")+
   theme_bw()
 ```
+5. Utilice el procedimiento de matching bajo los siguientes criterios para cal-
+cular el ATE:
 
+a) Weighting on the propensity score
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+
+```
+
+b) Nearest-neighbor matching
+
+```{r}
+
+```
+
+c) Coarsened exact matching
+
+Compare sus resultados y concluya el efecto del tratamiento en el contexto
+del problema.
+
