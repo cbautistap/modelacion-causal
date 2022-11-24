@@ -48,17 +48,23 @@ nsw_cov <- c("age", "educ", "black", "hisp", "marr", "nodegree", "re74",
 
 tbl1 <- nsw %>% group_by(treat) %>% 
   select(one_of(nsw_cov)) %>% 
-  summarise_all(funs(mean(., na.rm=T), sd(./sqrt(n()), na.rm=T))) %>% 
-  kable()
+  summarise_all(funs(mean(., na.rm=T), sd(./sqrt(n()), na.rm=T)))
 tbl1
 ```
 
-**as**
+**2. Calcule el ATE del experimento. Deberá obtener que el efecto del NSW
+job-training program sobre los ingresos reales fue un incremento de $1,794.343.
+(renglón 1 de la tabla 2).**
 
-You can also embed plots, for example:
+El ATE en este caso es la diferencia de medias entre grupo tratado y de control.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+Realizamos prueba t y observamos que la diferencia en medias es significativa
+
+```{r}
+ate <- tbl1$re78_mean[2] - tbl1$re78_mean[1]
+ate
+
+with(nsw, t.test(re78 ~ treat))
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
