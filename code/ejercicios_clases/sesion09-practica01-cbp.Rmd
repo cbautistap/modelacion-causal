@@ -1,0 +1,54 @@
+---
+title: "Practica 1. Matching"
+author: "Carlos Bautista"
+date: '2022-10-17'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(haven)
+library(tidyverse)
+library(dplyr)
+library(stargazer)
+library(knitr)
+library(magrittr)
+library(kableExtra)
+library(MatchIt)
+```
+
+## Práctica 1. Matching
+
+**Referencia**: Dehejia, Rajeev H., and Sadek Wahba. 2002. Propensity Score-
+Matching Methods for Nonexperimental Causal Studies. Review of Economics
+and Statistics 84 (1): 151–61.
+
+En esta práctica analizaremos el artículo de Dehejia y Wahba (2002), y replica-
+mos algunos de sus principales resultados. Los autores utilizan la metodología
+de matching para examinar el efecto de un programa de capacitación laboral
+en EUA (NSW job training program). Para realizar este análisis, utilizaremos el
+conjunto de datos adjunto a su artículo. Este conjunto de datos está disponible
+en Canvas y fue tomado de:
+
+https://mixtape.scunning.com/matching-and-subclassification.html
+
+### 1. Revise la descripción del programa que se realiza en la Sección I y replique
+la Tabla 1 de la muestra utilizada por los autores para describir a su
+conjunto de datos.:
+
+```{r}
+nsw <- read_dta("data/nsw_mixtape.dta")
+attach(nsw)
+View(nsw)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
