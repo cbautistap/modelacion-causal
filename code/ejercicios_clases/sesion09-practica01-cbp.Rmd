@@ -41,7 +41,7 @@ conjunto de datos:
 getwd()
 nsw <- read_dta("data/nsw_mixtape.dta")
 attach(nsw)
-View(nsw)
+#View(nsw)
 
 nsw_cov <- c('age', 'educ', 'black', 'hisp', 'marr', 'nodegree', 're74', 
              're75', 're78')
@@ -66,11 +66,6 @@ ate
 
 with(nsw, t.test(re78 ~ treat))
 ```
-```{r}
-lapply(nsw_cov,
-       function(v) {t.test(nsw[, v] ~ nsw[, 'treat'])})
-```
-
 
 **3.** Siguiendo el procedimiento de los autores, ahora utilice la información de
 la encuesta CPS como grupo de control no experimental. Agregue este
@@ -151,7 +146,8 @@ a) Weighting on the propensity score
 # primero queremos ver si hay NAs
 sum(is.na(nsw_cps)) # no hay ninguno
 
-match_wps <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
+match_wps <- matchit(treat ~ age + educ + black + hisp + marr + nodegree 
+                     +re74_1k + re75_1k,
                      method = "full", data=nsw_cps, s.weights = ~ ps_df$pr_score)
 print(summary(match_wps))
 
@@ -160,21 +156,22 @@ dm_wps <- match.data(match_wps)
 print(dim(dm_wps))
 print(head(dm_wps))
 
-prin(plot(match_wps))
+print(plot(match_wps))
 
-print(with(dm_wps, t.test(re78 ~ treat)))
+print(with(dm_wps, t.test(re78_1k ~ treat)))
 
-lm_treat_wps <- lm(re78 ~ treat, data = dm_wps)
+lm_treat_wps <- lm(re78_1k ~ treat, data = dm_wps)
 print(summary(lm_treat_wps))
-lm_treat_wps_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree +
-                       re74, + re75, data = dm_wps)
-print(lm_treat_wps_c)
+lm_treat_wps_c <- lm(re78_1k ~ treat + age + educ + black + hisp + marr + nodegree +
+                       re74_1k + re75_1k, data = dm_wps)
+print(summary(lm_treat_wps_c))
 ```
 
 b) Nearest-neighbor matching
 
 ```{r}
-match_near <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
+match_near <- matchit(treat ~ age + educ + black + hisp + marr + nodegree
+                      +re74_1k +re75_1k,
                      method = "nearest", data=nsw_cps)
 print(summary(match_near))
 
@@ -185,20 +182,21 @@ print(head(dm_near))
 
 print(plot(match_near))
 
-print(with(dm_near, t.test(re78 ~ treat)))
+print(with(dm_near, t.test(re78_1k ~ treat)))
 
-lm_treat_near <- lm(re78 ~ treat, data = dm_near)
+lm_treat_near <- lm(re78_1k ~ treat, data = dm_near)
 print(summary(lm_treat_near))
 
-lm_treat_near_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree +
-                        re74, + re75, data = dm_near)
+lm_treat_near_c <- lm(re78_1k ~ treat + age + educ + black + hisp + marr + nodegree +
+                        re74_1k + re75_1k, data = dm_near)
 print(summary(lm_treat_near_c))
 ```
 
 c) Coarsened exact matching
 
 ```{r}
-match_cem <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
+match_cem <- matchit(treat ~ age + educ + black + hisp + marr + nodegree +
+                       re74_1k + re75_1k,
                      method = "cem", data=nsw_cps)
 print(summary(match_near))
 
@@ -209,13 +207,13 @@ print(head(dm_cem))
 
 print(plot(match_cem))
 
-print(with(dm_cem, t.test(re78 ~ treat)))
+print(with(dm_cem, t.test(re78_1k ~ treat)))
 
-lm_treat_cem <- lm(re78 ~ treat, data = dm_cem)
+lm_treat_cem <- lm(re78_1k ~ treat, data = dm_cem)
 print(summary(lm_treat_cem))
 
-lm_treat_cem_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree +
-                       re74 + re75, data = dm_cem)
+lm_treat_cem_c <- lm(re78_1k ~ treat + age + educ + black + hisp + marr + nodegree +
+                       re74_1k + re75_1k, data = dm_cem)
 print(summary(lm_treat_cem_c))
 ```
 
@@ -229,16 +227,18 @@ Sin embargo, al utilizar los datos de CPS (que podemos sugerir que tienen sesgo 
 como grupo de control, y al implementar técnicas de matching para balancear los grupos, 
 se observa un cambio significativo en el resultado, dependiendo el matching utilizado.
 
-Con matching ponderado con el propensity score, el efecto causal es el contrario, es decir,
-participar en el programa tiene un impacto negativo de -___ usd en promedio.
+Con matching ponderado con el propensity score, el efecto causal no es significativo
+para el modelo con controles. Para el modelo sin controles, el efecto es el contrario, 
+es decir, participar en el programa tiene un impacto negativo de -8 mil usd en promedio.
 
-Con nearest neighbor, el efecto causal del programa, con controles, resulta ser positivo.
-Es decir el programa tiene aumenta los ingresos en 1668 usd en promedio (significativo al 90%),
-magnitud similar al ate inicial de 1794.
+Con nearest neighbor, el efecto causal del programa, con controles, resulta también ser positivo.
+Es decir el programa tiene aumenta los ingresos en 1,678 usd en promedio (significativo al 95%),
+magnitud similar al ate inicial de 1794. El modelo sin controles es  prácticamente igual
+al resultado del benchmark, un efecto causal promedio de 1,762 adicionales en el ingreso por 
+participar en el programa (significativo al 95%).
 
-En el caso de coersened exact matching el ate (con los controles señalados) es de 1,164 usd
-(significativo al 90%).El programa es positivo aunque su impacto es de menor magnitud comparado
-con el benchmark y el matching nearest.
-
-Es importante mencionar que en los modelos especificados sin controles, el ate despúes de
-hacer el matching es negativo para todos los casos.
+En el caso de coersened exact matching el ate (con los controles señalados) es de casi 3 mil usd
+adicionales por participar en el programa, en promedio (con mayor significancia). La magnitud es mayor
+con el modelo con controles y este tipo de matching.
+En el modelo sin controles, el coeficiente es de 2.2 mil usd. Esto es también superior al benchmark
+y el matching de nearest neighbors, pero en menor magnitud que en el modelo con controles.
