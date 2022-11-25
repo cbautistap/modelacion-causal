@@ -183,16 +183,16 @@ dm_near <- match.data(match_near)
 print(dim(dm_near))
 print(head(dm_near))
 
-plot(match_near)
+print(plot(match_near))
 
-with(dm_near, t.test(re78 ~ treat))
+print(with(dm_near, t.test(re78 ~ treat)))
 
 lm_treat_near <- lm(re78 ~ treat, data = dm_near)
-summary(lm_treat_near)
+print(summary(lm_treat_near))
 
 lm_treat_near_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
                      , data = dm_near)
-print(lm_treat_near_c)
+print(summary(lm_treat_near_c))
 ```
 
 c) Coarsened exact matching
@@ -209,16 +209,18 @@ print(head(dm_cem))
 
 print(plot(match_cem))
 
-print(with(dm_near, t.test(re78 ~ treat))
+print(with(dm_cem, t.test(re78 ~ treat)))
 
-lm_treat_near <- lm(re78 ~ treat, data = dm_near)
-summary(lm_treat_near)
+lm_treat_cem <- lm(re78 ~ treat, data = dm_cem)
+print(summary(lm_treat_cem))
 
-lm_treat_near_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
-                     , data = dm_near)
-print(lm_treat_near_c)
+lm_treat_cem_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
+                     , data = dm_cem)
+print(summary(lm_treat_cem_c))
 ```
 
 Compare sus resultados y concluya el efecto del tratamiento en el contexto
 del problema.
+
+
 
