@@ -82,7 +82,7 @@ Unimos datos de CPS
 ```{r}
 cps <- read_dta('data/cps_mixtape.dta')
 dim(cps)
-View(cps)
+#View(cps)
 
 nsw_cps <- nsw %>% filter(treat == 1) %>% 
   bind_rows(cps)
@@ -99,16 +99,20 @@ nsw_cps <- nsw_cps %>%
   mutate(re74_1k = re74/1000,
          re75_1k = re75/1000,
          re78_1k = re78/1000)
-ps <- glm(treat ~ age + educ + black + hisp + marr + nodegree + re74_1k+
-            re75, family = binomial(), data = nsw_cps)
+ps <- glm(treat ~ age + educ + black + hisp + marr + nodegree,# + re74_1k+ re75_1k,
+          family = binomial(), data = nsw_cps)
 summary(ps)
 ```
 
 Calculamos propensity score usando modelo estimado previamente.
-El propensity score son los valores ajustados (predichos) por el modelo logit
+El propensity score son los valores ajustados (predichos) por el modelo logit.
+Es decir, usamos los coeficientes de la regresión logit para estimar la probabilidad
+condicional de pertenecer al grupo de tratamiento.
 
-Observamos en los resultados que individuos con probabilidades bajas,
-menores al 30%, están clasificados en el grupo de tratamiento.
+Observamos en los resultados que individuos con probabilidades relativas muy bajas (0.6) 
+pueden ser clasificados en el grupo de tratamiento o individuos con probabilidades 
+más altas (0.13) pueden estar en control.
+
 Podemos afirmar que el grupo de control (CPS) ahora sufre de sesgo de selección,
 al no provenir de un diseño experimental, sino de una muestra de TODA la población.
 
@@ -124,7 +128,7 @@ tail(ps_df)
 región del *commun support*
 
 Validamos el *commun support* con el histograma, para ambos grupos observamos
-que los valores se encuentran entre el rango [0 y 0.5]
+que los valores se encuentran entre el rango [0 y 0.4]
 
 ```{r}
 labs <- paste("Grupo real al que pertenece:", 
@@ -147,13 +151,41 @@ a) Weighting on the propensity score
 # primero queremos ver si hay NAs
 sum(is.na(nsw_cps)) # no hay ninguno
 
-match_wps <- 
+match_wps <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
+                     method = "full", data=nsw_cps, s.weights = ~ ps_df$pr_score)
+print(summary(match_wps))
+
+#generamos df matched
+dm_wps <- match.data(match_wps)
+print(dim(dm_wps))
+print(head(dm_wps))
+
+plot(match_wps)
+
+with(dm_wps, t.test(re78 ~ treat))
+
+lm_treat_wps <- lm(re78 ~ treat, data = dm_wps)
+summary(lm_treat_wps)
 ```
 
 b) Nearest-neighbor matching
 
 ```{r}
+match_wps <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
+                     method = "full", data=nsw_cps, s.weights = ~ ps_df$pr_score)
+print(summary(match_wps))
 
+#generamos df matched
+dm_wps <- match.data(match_wps)
+print(dim(dm_wps))
+print(head(dm_wps))
+
+plot(match_wps)
+
+with(dm_wps, t.test(re78 ~ treat))
+
+lm_treat_wps <- lm(re78 ~ treat, data = dm_wps)
+summary(lm_treat_wps)
 ```
 
 c) Coarsened exact matching
