@@ -166,8 +166,8 @@ print(with(dm_wps, t.test(re78 ~ treat)))
 
 lm_treat_wps <- lm(re78 ~ treat, data = dm_wps)
 print(summary(lm_treat_wps))
-lm_treat_wps_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
-                     , data = dm_wps)
+lm_treat_wps_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree +
+                       re74, + re75, data = dm_wps)
 print(lm_treat_wps_c)
 ```
 
@@ -190,8 +190,8 @@ print(with(dm_near, t.test(re78 ~ treat)))
 lm_treat_near <- lm(re78 ~ treat, data = dm_near)
 print(summary(lm_treat_near))
 
-lm_treat_near_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
-                     , data = dm_near)
+lm_treat_near_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree +
+                        re74, + re75, data = dm_near)
 print(summary(lm_treat_near_c))
 ```
 
@@ -214,13 +214,31 @@ print(with(dm_cem, t.test(re78 ~ treat)))
 lm_treat_cem <- lm(re78 ~ treat, data = dm_cem)
 print(summary(lm_treat_cem))
 
-lm_treat_cem_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
-                     , data = dm_cem)
+lm_treat_cem_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree +
+                       re74 + re75, data = dm_cem)
 print(summary(lm_treat_cem_c))
 ```
 
 Compare sus resultados y concluya el efecto del tratamiento en el contexto
 del problema.
 
+Con los datos de NSW el análsis causal mostró que el programa tuvo un impacto positivo
+con una mejora promedio de 1,794 usd para el grupo de tratamiento.
 
+Sin embargo, al utilizar los datos de CPS (que podemos sugerir que tienen sesgo de selección)
+como grupo de control, y al implementar técnicas de matching para balancear los grupos, 
+se observa un cambio significativo en el resultado, dependiendo el matching utilizado.
 
+Con matching ponderado con el propensity score, el efecto causal es el contrario, es decir,
+participar en el programa tiene un impacto negativo de -___ usd en promedio.
+
+Con nearest neighbor, el efecto causal del programa, con controles, resulta ser positivo.
+Es decir el programa tiene aumenta los ingresos en 1668 usd en promedio (significativo al 90%),
+magnitud similar al ate inicial de 1794.
+
+En el caso de coersened exact matching el ate (con los controles señalados) es de 1,164 usd
+(significativo al 90%).El programa es positivo aunque su impacto es de menor magnitud comparado
+con el benchmark y el matching nearest.
+
+Es importante mencionar que en los modelos especificados sin controles, el ate despúes de
+hacer el matching es negativo para todos los casos.
