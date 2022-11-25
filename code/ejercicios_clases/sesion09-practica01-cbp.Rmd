@@ -18,7 +18,6 @@ library(kableExtra)
 library(MatchIt)
 ```
 
-## Práctica 1. Matching
 
 **Referencia**: Dehejia, Rajeev H., and Sadek Wahba. 2002. Propensity Score-
 Matching Methods for Nonexperimental Causal Studies. Review of Economics
