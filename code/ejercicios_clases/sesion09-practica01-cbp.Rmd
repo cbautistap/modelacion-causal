@@ -160,35 +160,64 @@ dm_wps <- match.data(match_wps)
 print(dim(dm_wps))
 print(head(dm_wps))
 
-plot(match_wps)
+prin(plot(match_wps))
 
-with(dm_wps, t.test(re78 ~ treat))
+print(with(dm_wps, t.test(re78 ~ treat)))
 
 lm_treat_wps <- lm(re78 ~ treat, data = dm_wps)
-summary(lm_treat_wps)
+print(summary(lm_treat_wps))
+lm_treat_wps_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
+                     , data = dm_wps)
+print(lm_treat_wps_c)
 ```
 
 b) Nearest-neighbor matching
 
 ```{r}
-match_wps <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
-                     method = "full", data=nsw_cps, s.weights = ~ ps_df$pr_score)
-print(summary(match_wps))
+match_near <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
+                     method = "nearest", data=nsw_cps)
+print(summary(match_near))
 
 #generamos df matched
-dm_wps <- match.data(match_wps)
-print(dim(dm_wps))
-print(head(dm_wps))
+dm_near <- match.data(match_near)
+print(dim(dm_near))
+print(head(dm_near))
 
-plot(match_wps)
+plot(match_near)
 
-with(dm_wps, t.test(re78 ~ treat))
+with(dm_near, t.test(re78 ~ treat))
 
-lm_treat_wps <- lm(re78 ~ treat, data = dm_wps)
-summary(lm_treat_wps)
+lm_treat_near <- lm(re78 ~ treat, data = dm_near)
+summary(lm_treat_near)
+
+lm_treat_near_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
+                     , data = dm_near)
+print(lm_treat_near_c)
 ```
 
 c) Coarsened exact matching
+
+```{r}
+match_cem <- matchit(treat ~ age + educ + black + hisp + marr + nodegree,
+                     method = "cem", data=nsw_cps)
+print(summary(match_near))
+
+#generamos df matched
+dm_cem <- match.data(match_cem)
+print(dim(dm_cem))
+print(head(dm_cem))
+
+print(plot(match_cem))
+
+print(with(dm_near, t.test(re78 ~ treat))
+
+lm_treat_near <- lm(re78 ~ treat, data = dm_near)
+summary(lm_treat_near)
+
+lm_treat_near_c <- lm(re78 ~ treat + age + educ + black + hisp + marr + nodegree
+                     , data = dm_near)
+print(lm_treat_near_c)
+```
 
 Compare sus resultados y concluya el efecto del tratamiento en el contexto
 del problema.
