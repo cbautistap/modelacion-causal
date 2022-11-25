@@ -1,0 +1,78 @@
+---
+title: "Sesión 10. Control sintético"
+output: html_notebook
+---
+
+## Estimación del efecto del Programa de Control del tabaco en California de 1988.
+### Abadie, Diamond (2010)
+
+```{r}
+library(tidyverse)
+library(devtools)
+library(Synth)
+library(SCtools)
+```
+
+La variable de interés es el consumo de tabaco en California, la unidad tratada es el 
+estado de California y los posibles controles los otros estados de EUA mediante los
+posibles predictores del consumo de tabaco.
+
+Cargamos datos e identificamos qué estado es el de tratamiento (California)
+
+```{r}
+load("data/smoking.rda")
+
+stateno <- as.numeric(smoking$state)
+base <- data.frame(smoking, stateno)
+smoking$state
+```
+
+**Preparación de los datos** (ver nota pdf para ver qué significa cada uno).
+Ojo, es clave entender diferencia entre `predictors` y `special.predictors` y, por
+lo tanto, definirlos bien para lograr una correcta réplica. Los predictores originales 
+se usan en toda la serie y los especiales son con base en la tendencia de la(s) serie(s)
+original. Podríamos decir que la serie necesita esos puntos especiales para ajustar de 
+manera correcta
+
+```{r}
+basecs <- dataprep(
+  foo = base,
+  predictors = c("lnincome", "age15to24", "retprice"),
+  predictors.op = "mean",
+  special.predictors = list(list("beer", 1984:1988, "mean"),
+                            list("cigsale", 1975, "mean"),
+                            list("cigsale", 1980, "mean"),
+                            list("cigsale", 1988, "mean")),
+  time.predictors.prior = 1980:1988,
+  dependent = "cigsale",
+  unit.variable = "stateno",
+  time.variable = "year",
+  treatment.identifier = 3,
+  controls.identifier = c(1:2, 4:38),
+  time.optimize.ssr = 1970:1988,
+  time.plot = 1970:2000)
+```
+
+**Diseño del control sintético**.
+El control sintético se calcula a partir de:
+
+```{r}
+resultados <- synth(data.prep.obj = basecs)
+```
+Sus principales resultados se pueden ver en la siguiente tabla:
+
+```{r}
+tablacs <- synth.tab(
+  synth.res = resultados,
+  dataprep.res = basecs,
+  round.digit = 3)
+tablacs
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
