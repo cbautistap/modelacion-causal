@@ -77,7 +77,11 @@ tablacs
 
 **Gráfico 2.**
 
-Path plot de la variable observada y su sintético (contrafactual)
+Path plot de la variable observada y su sintético (contrafactual).
+Por lo tanto, la diferencia entre ambos paths es el efecto del tratamiento.
+
+Nota. Buscamos con el control sintético que California sintética se parezca MUCHO
+a California observada en el periodo previo al tratamiento
 
 ```{r}
 path.plot(synth.res = resultados,
@@ -86,14 +90,17 @@ path.plot(synth.res = resultados,
           Ylab = c("Consumo de cigarros per cápita"),
           Xlab = c("Año"),
           Ylim = c(0,140),
-          Legend = c("Tratamiento", "Control"),
+          Legend = c("California observada", "California sintética"),
           Legend.position = c("topright"),
           Main = NA,
           Z.plot = FALSE)
 ```
 
 **Gráfico 3.**
-
+Calcula diferencia entre California observada y California sintética.
+Buscaríamos que antes del año de tratamiento tengamos valores muy cercanos a cero
+(buen ajuste) y después del año de tratamiento se empieza a observar la brecha 
+(efecto del tratamiento)
 
 ```{r}
 gaps.plot(synth.res = resultados,
