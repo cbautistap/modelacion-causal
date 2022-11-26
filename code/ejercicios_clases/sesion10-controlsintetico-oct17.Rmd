@@ -107,11 +107,36 @@ gaps.plot(synth.res = resultados,
           dataprep.res = basecs,
           Ylab = c("Dif. Consumo de Cigarros percápita"),
           Xlab = c("Año"),
-          Main = c("Diferencia entre T y C"),
+          Main = c("Diferencia entre Cali obs y Cali sintética"),
           tr.intake = 1988,
           Ylim = c(-30,30),
           Z.plot = FALSE)
 ```
+
+**Inferencia.**
+Generamos controles sintéticos placebo para poder realizar inferencia.
+(Generamos tantos como los controles originales)
+
+Analizar como la prueba de permutaciones aleatorias
+
+La idea es ver qué tan significativo es el efecto estimado mediante CS.
+El método es una especie de prueba de Fisher, i.e. con permutaciones aleatorias
+(es tardado el outcome porque hace permutaciones)
+
+Probamos que lo que hicimos realmente es una réplica que tiene sentido, que viene
+de algo totalmente aleatorio.
+
+De ahí que generemos "placebos". Es decir, generar controles sintéticos para EL RESTO 
+DE LAS ENTIDADES. Y entonces evaluamos si lo que hicimos para California es 
+producto del azar o no
+
+```{r}
+placebos <- generate.placebos(dataprep.out = basecs, synth.out = resultados,
+                              Sigf.ipop = 3)
+
+plot_placebos(placebos)
+```
+
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
