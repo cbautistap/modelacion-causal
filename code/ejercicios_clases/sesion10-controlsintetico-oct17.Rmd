@@ -59,7 +59,11 @@ El control sintético se calcula a partir de:
 ```{r}
 resultados <- synth(data.prep.obj = basecs)
 ```
+**Resultados.**
 Sus principales resultados se pueden ver en la siguiente tabla:
+
+En la primera tabla vemos cuánto aporta cada variable.
+En la segunda tabla vemos cuánto aporta cada entidad
 
 ```{r}
 tablacs <- synth.tab(
@@ -68,6 +72,14 @@ tablacs <- synth.tab(
   round.digit = 3)
 tablacs
 ```
+
+**Gráfico 2.**
+
+
+```{r}
+path.plot(synth.res = resultados)
+```
+
 
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
