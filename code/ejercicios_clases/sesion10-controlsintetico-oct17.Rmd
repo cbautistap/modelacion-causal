@@ -56,7 +56,8 @@ basecs <- dataprep(
 **Diseño del control sintético**.
 El control sintético se calcula a partir de:
 
-Nota. en los resultados, LOSS (V) es la diferencia entre variables y entre controles
+Nota. en los resultados, LOSS (V, W) es la distancia (métrica de diferencia) entre
+variables y entre controles. V son los de cada variables y los w de los controles
 ```{r}
 resultados <- synth(data.prep.obj = basecs)
 ```
@@ -92,7 +93,7 @@ path.plot(synth.res = resultados,
 ```
 
 **Gráfico 3.**
-asdf
+
 
 ```{r}
 gaps.plot(synth.res = resultados,
@@ -101,7 +102,8 @@ gaps.plot(synth.res = resultados,
           Xlab = c("Año"),
           Main = c("Diferencia entre T y C"),
           tr.intake = 1988,
-          Ylim = c(-30,30))
+          Ylim = c(-30,30),
+          Z.plot = FALSE)
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
