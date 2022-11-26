@@ -133,10 +133,13 @@ producto del azar o no
 ```{r}
 placebos <- generate.placebos(dataprep.out = basecs, synth.out = resultados,
                               Sigf.ipop = 3)
-
-plot_placebos(placebos)
 ```
 
+Gráfica de placebos
+
+```{r}
+plot_placebos(placebos, discard.extreme = TRUE)
+```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
 
