@@ -77,7 +77,16 @@ tablacs
 
 
 ```{r}
-path.plot(synth.res = resultados)
+path.plot(synth.res = resultados,
+          dataprep.res = basecs,
+          tr.intake = 1988,
+          Ylab = c("Consumo de cigarros per cápita"),
+          Xlab = c("Año"),
+          Ylim = c(0,140),
+          Legend = c("Tratamiento", "Control"),
+          Legend.position = c("topright"),
+          Main = NA,
+          Z.plot = FALSE)
 ```
 
 
