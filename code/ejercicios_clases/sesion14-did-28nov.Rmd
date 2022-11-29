@@ -5,6 +5,10 @@ date: '2022-11-28'
 output: html_notebook
 ---
 
+```{r}
+library(tidyverse)
+```
+
 Siguiendo el estudio de Card y Krueger (1994) analizaremos la relación entre un aumento del salario mínimo
 y el empleo.
 
@@ -34,7 +38,10 @@ Es decir, ¿tiene impacto la política implementada?
 Interprete todos sus resultados.
 
 ```{r}
-plot(cars)
+dta <- read_csv("data/datadid.csv")
+attach(dta)
+did <- lm(Empl ~ Treatment + Group + Treatment*Group)
+summary(did)
 ```
 
 Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
