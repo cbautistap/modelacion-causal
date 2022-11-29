@@ -1,0 +1,45 @@
+---
+title: "Sesión 14. Diferencias en diferencias"
+author: "Carlos Bautista"
+date: '2022-11-28'
+output: html_notebook
+---
+
+Siguiendo el estudio de Card y Krueger (1994) analizaremos la relación entre un aumento del salario mínimo
+y el empleo.
+
+Las teoría económica sugiere que los aumentos del salario mínimo conducen a una reducción del empleo por
+al menos dos razones:
+
+[ ] Las empresas tienen menos probabilidades de contratar personal y prefieren invertir en otros recursos
+que ahora son más baratos debido al aumento salarial.
+[ ]Los salarios más altos inducen a las empresas a subir sus precios para compensar sus mayores costos; a
+medida que aumentan los precios, los compradores disminuyen, lo que conducirá a una menor demanda
+y empleo.
+
+Uno de los primeros estudios que analizó este problema de política fue el de Card y Krueger, quienes aplicaron el método de diferencias en diferencias en dos grupos de restaurantes de comida rápida: restaurantes de comida rápida en Nueva Jersey donde el salario mínimo aumentó de $4.25 a $5.05 por hora (grupo detratamiento) yrestaurantes de comida rápida en Pensilvania donde el salario mínimo no aumentó (grupo de control).
+
+Con ayuda del conjunto de datos anexo se pide analizar si los aumentos del salario mínimo afectan al al
+empleo. Específicamente responda:
+
+[ ] ¿El efecto en el grupo de control es significativo antes de implementar la política?
+[ ] ¿Los grupos de tratamiento y de control muestran alguna diferencia significativan antes de implementar
+la política?
+[ ] ¿En el grupo de tratamiento existe algún cambio significativo entre el primer y el segundo período de
+tiempo?
+[ ] Después del tratamiento ¿Hay algún efecto significativo en el grupo de tratamiento sobre el de control?
+
+Es decir, ¿tiene impacto la política implementada?
+
+Interprete todos sus resultados.
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
