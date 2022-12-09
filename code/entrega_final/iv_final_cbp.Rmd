@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 **a. Artículo de Referencia**
+
 Nunn, Nathan, and Leonard Wantchekon. 2011a. “The Slave Trade and the
 Origins of Mistrust in Africa.” Am. Econ. Rev. 101 (7): 3221–52.
 
@@ -32,8 +33,10 @@ que la mayor parte del impacto de la trata de esclavos se produce a través de
 factores internos del individuo, como las normas, creencias y valores culturales.
 
 **c. Análisis**
+
 El artículo analiza si las diferencias actuales en los niveles de confianza dentro de
 África se deben al comercio de esclavos en el transatlántico y el Océano Índico.
+
 Con ayuda de datos de encuestas recientes a nivel individual y con datos his-
 tóricos sobre el comercio de esclavos por grupo étnico, los autores encuentran
 que las personas cuyos ancestros fueron fuertemente atacados durante la trata
@@ -41,8 +44,34 @@ de esclavos son menos confiados hoy. Por ello, la variable de tratamiento es la
 trata de esclavos (1400-1900) y la resultado los niveles actuales de confianza en
 las comunidades.
 
+El instrumento elegido para el análisis debe ser una variable que esté corre-
+lacionada con el número de esclavos tomados de un grupo étnico pero no co-
+rrelacionado con ninguna característica del grupo étnico que pueda afectar la
+confianza de los descendientes. Por ello, eligieron la distancia de la etnia de un
+individuo hacia la costa durante la trata de esclavos. Este instrumento logra
+captar la exposición de un grupo étnico a la demanda de esclavos. pero además,
+la distancia desde la costa no está correlacionada con otros factores que pueda
+afectar la confianza de sus descendientes.
+
+**d. Datos**
+
+El conjunto de datos es slavetrade.dta. Se puede obtener mayor descripción
+de los datos e información para replicar el artículo en el sitio web del autor
+https://scholar.harvard.edu/nunn/pages/data-0.
+
+**e. Instrucciones**
+
+**1.** Escriba una introducción del análisis que realizará con ayuda de este con-
+junto de datos de acuerdo al contexto del problema.
+
+COMPLETAR CBP
+
+**2.** Ilustre correctamente los factores considerados en dicho análisis. Para ello,
+realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
+detrás de la relación causal que busca analizar y cuantificar el artículo.
+
 ```{r cars}
-summary(cars)
+
 ```
 
 ## Including Plots
