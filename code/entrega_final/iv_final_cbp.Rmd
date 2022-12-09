@@ -78,16 +78,60 @@ COMPLETAR CBP
 realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
 detrás de la relación causal que busca analizar y cuantificar el artículo.
 
-```{r cars}
+```{r}
 
 ```
 
-## Including Plots
+**3.** Luego de leer el conjunto de datos (21,822 observaciones), empiece por
+realizar el análisis exploratorio de las variables y describa su comporta-
+miento. Tome en cuenta que hay un grupo de variables numéricas y otras
+categóricas que deben ser descritas de manera particular de acuerdo a su
+naturaleza.
 
-You can also embed plots, for example:
+```{r}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+**4.** Realice los gráficos de la distribución de algunas de las variables. Por
+ejemplo, elija: dos de las variables de confianza como resultados (trust
+in neighbours, trust in in the local council), la variable de trata-
+miento slave exports y la variable instrumental distance to the see.
+Analice su comportamiento e interprete sus resultados.
+
+**5.** Obtenga las estimaciones por mínimos cuadrados ordinarios para los de-
+terminantes de la variable Trust of neighbors. Esto es, replique los re-
+sultados de la tabla 1 del artículo. Tome en cuenta la corrección que se
+hace a los errores estándar robustos ante la heterogeneidad. Puede obtener
+al menos los dos primeros utilizando las funciones en R de Arai (2015) clx
+y mclx. Tal como refiere el artículo, los primeros errores estándar robustos
+consideran sólo heterogeneidad por el nombre de comunidad, los segundos
+lo hacen por nombre de comunidad y distrito.
+
+**6.** Ahora repita la estimación por mínimos cuadrados ordinarios pero para
+los determinantes de la variable Trust of others. Esto es, en la medida 
+de lo posible, replique los resultados de la tabla 2. Compare e interprete
+los resultados que obtuvo en este inciso con los del anterior.
+
+**7.** Analice la variable instrumental a detalle. Utilice regresiones de mínimos
+cuadrados ordinarios para revisar si el instrumento afecta a la variable
+de tratamiento slave exports. También revise si el instrumento afecta a
+cada una de las variables dependientes de confianza. Analice y discuta sus
+resultados.
+
+**8.** Uitilice su instrumento para realizar ahora los modelos para las variables
+dependientes mediante el uso de la variable instrumental. Ahora deberá
+replicar los resultados de la tabla 5 del artículo. Tome en cuanta cómo
+debe incorporar controles para cada especificación.
+
+**9.** Finalmente, realice las pruebas de diagnóstico convencionales sobre ins-
+trumentos débiles. Utilce las funciones disponibles en el paquete ivreg de
+R. Interprete sus resultados y concluya en el contexto del problema.
+
+**10.** Escriba la conclusión general del análisis realizado. Interprete la cuanti-
+ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
+estrategia empírica seleccionada para la cuantificación del efecto causal.
+
+
+Deberá remitir su documento PDF con todo lo aquí solicitado así como el código
+o script en R para la obtención de los resultados.
