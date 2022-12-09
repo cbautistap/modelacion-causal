@@ -9,6 +9,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
+library(stargazer)
+library(dagitty)
+
+```
+
+
 **a. Artículo de Referencia**
 
 Nunn, Nathan, and Leonard Wantchekon. 2011a. “The Slave Trade and the
