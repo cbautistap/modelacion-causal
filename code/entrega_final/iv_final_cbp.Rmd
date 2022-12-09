@@ -1,0 +1,56 @@
+---
+title: "Entrega Final. Variables Instrumentales"
+author: "Carlos Bautista"
+date: '2022-12-03'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**a. Artículo de Referencia**
+Nunn, Nathan, and Leonard Wantchekon. 2011a. “The Slave Trade and the
+Origins of Mistrust in Africa.” Am. Econ. Rev. 101 (7): 3221–52.
+
+**b. Descripción General**
+
+Este artículo se encuentra dentro de muchos otros que tratan de medir los efectos
+de largo plazo del esclavismo en África. Su hipótesis principal a demostrar es
+si las diferencias actuales en los niveles de confianza dentro de África pueden
+deberse al comercio de esclavos al que fueron sometidas las comunidades en los
+siglos pasados.
+
+Al vincular información a nivel individual con datos históricos sobre envíos de
+esclavos por grupo étnico, los autores encuentran que aquellos individuos cuyos
+ancestros fueron fuertemente atacados durante el comercio de esclavos son menos
+confiados hoy.
+
+Esta evidencia que obtienen aplicando diferentes estrategias empíricas sugiere
+que la relación es causal. Además, al analizar los mecanismos causales, muestran
+que la mayor parte del impacto de la trata de esclavos se produce a través de
+factores internos del individuo, como las normas, creencias y valores culturales.
+
+**c. Análisis**
+El artículo analiza si las diferencias actuales en los niveles de confianza dentro de
+África se deben al comercio de esclavos en el transatlántico y el Océano Índico.
+Con ayuda de datos de encuestas recientes a nivel individual y con datos his-
+tóricos sobre el comercio de esclavos por grupo étnico, los autores encuentran
+que las personas cuyos ancestros fueron fuertemente atacados durante la trata
+de esclavos son menos confiados hoy. Por ello, la variable de tratamiento es la
+trata de esclavos (1400-1900) y la resultado los niveles actuales de confianza en
+las comunidades.
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
