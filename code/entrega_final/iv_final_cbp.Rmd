@@ -175,7 +175,7 @@ Para replicar la Tabla 1 se estima el mismo modelo pero cambiando la variable
 dependiente:
 
 ```{r}
-# Modelo 1 de tabla 1 (M1.1). seleccionamos variables de interés
+# Tabla 1, modelo 1 (M1.1). seleccionamos variables de interés
 dta_11 <- dta %>% select(trust_neighbors, exports, #export_area, export_pop,
                        #ln_exports, ln_export_area, ln_export_pop,
                        age, age2, male,
@@ -200,26 +200,47 @@ ee2_11 <- mclx(mod_11, 1, dta_11$murdock_name, dta_11$district)
 #summary(mod_11)  
 #ee1_11
 
-dta_1b <- dta %>% select(trust_neighbors, export_area, #export_pop,
+# Tabla 1 modelo 2 (M1.2)
+dta_12 <- dta %>% select(trust_neighbors, export_area, #export_pop,
                        #ln_exports, ln_export_area, ln_export_pop,
                        age, age2, male,
                        urban_dum, education, occupation, religion,
                        living_conditions, district_ethnic_frac,
                        frac_ethnicity_in_district, isocode,
                        murdock_name, district) %>% na.omit()
-m2_vec <- lm(trust_neighbors ~ export_area + age + age2 + male + urban_dum +
+mod_12 <- lm(trust_neighbors ~ export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
                as.factor(religion) + as.factor(occupation) +
                district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode), data = dta_1b)
-  
+               as.factor(isocode), data = dta_12)
 
+ee1_12 <- clx(mod_12, 1, dta_12$murdock_name)
+ee2_12 <- mclx(mod_12, 1, dta_12$murdock_name, dta_12$district)
+
+# M1.3
+dta_13 <- dta %>% select(trust_neighbors, export_pop,
+                       #ln_exports, ln_export_area, ln_export_pop,
+                       age, age2, male,
+                       urban_dum, education, occupation, religion,
+                       living_conditions, district_ethnic_frac,
+                       frac_ethnicity_in_district, isocode,
+                       murdock_name, district) %>% na.omit()
+mod_13 <- lm(trust_neighbors ~ export_pop + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_13)
+
+ee1_13 <- clx(mod_13, 1, dta_13$murdock_name)
+ee2_13 <- mclx(mod_13, 1, dta_13$murdock_name, dta_13$district)
 ```
 
 Se reportan resultados:
 ```{r}
-stargazer(mod_11, type = "text",
-          se = list(ee1_11[,2], ee2_11[,2]),
+stargazer(mod_11, mod_12, mod_13, type = "text",
+          se = list(c(ee1_11[,2], ee2_11[,2]), 
+                    c(ee1_12[,2], ee2_12[,2]),
+                    c(ee1_13[,2], ee2_13[,2])),
           digits = 5)
 ```
 
