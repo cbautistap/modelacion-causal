@@ -13,7 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(stargazer)
 library(dagitty)
-
+library(AER)
+library(haven)
 ```
 
 
@@ -89,6 +90,9 @@ categóricas que deben ser descritas de manera particular de acuerdo a su
 naturaleza.
 
 ```{r}
+dta <- read_dta("data/slavetrade.dta")
+attach(dta)
+
 
 ```
 
