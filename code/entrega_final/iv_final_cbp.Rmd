@@ -316,57 +316,105 @@ dependiente.
 ```{r}
 # filtramos datos para obtener variables de interés. En este caso, podemos generar 
 # una sola bd dado que utilizaremos solo a ln_export_area como variable de tratamiento
-dta_2 <- dta %>% select(trust_relatives, trust_neighbors, trust_local_council,
-                    intra_group_trust, inter_group_trust, ln_export_area, 
+dta_21 <- dta %>% select(trust_relatives, 
+                         #trust_neighbors, 
+                         #trust_local_council,
+                    #intra_group_trust, 
+                    #inter_group_trust, 
+                    ln_export_area, 
                     age, age2, male, urban_dum, education, occupation, religion,
                     living_conditions, district_ethnic_frac,
                     frac_ethnicity_in_district, isocode, murdock_name,
                     district) %>% na.omit()
+
+dta_22 <- dta %>% select(#trust_relatives, 
+                            trust_neighbors, 
+                            #trust_local_council,
+                    #intra_group_trust, 
+                    #inter_group_trust,
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district,
+                    isocode, murdock_name,
+                    district) %>% na.omit()
+
+dta_23 <- dta %>% select(#trust_relatives, 
+                            #trust_neighbors, 
+                            trust_local_council,
+                    #intra_group_trust, 
+                    #inter_group_trust,
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district,
+                    isocode, murdock_name,
+                    district) %>% na.omit() 
+
+dta_24 <- dta %>% select(#trust_relatives, 
+                            #trust_neighbors, 
+                            #trust_local_council,
+                    intra_group_trust, 
+                    #inter_group_trust,
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district,
+                    isocode, murdock_name,
+                    district) %>% na.omit()
+
+dta_25 <- dta %>% select(#trust_relatives, 
+                            #trust_neighbors, 
+                            #trust_local_council,
+                    #intra_group_trust, 
+                    inter_group_trust,
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district,
+                    isocode, murdock_name,
+                    district) %>% na.omit() 
 
 # Tabla 2, modelo 1 (M2.1)
 mod_21 <- lm(trust_relatives ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
                as.factor(religion) + as.factor(occupation) +
                district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode), data = dta_2)
-ee1_21 <- clx(mod_21, 1, dta_2$murdock_name)
-ee2_21 <- mclx(mod_21, 1, dta_2$murdock_name, dta_2$district)
+               as.factor(isocode), data = dta_21)
+ee1_21 <- clx(mod_21, 1, dta_21$murdock_name)
+ee2_21 <- mclx(mod_21, 1, dta_21$murdock_name, dta_21$district)
 
 # M2.2
 mod_22 <- lm(trust_neighbors ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
                as.factor(religion) + as.factor(occupation) +
                district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode), data = dta_2)
-ee1_22 <- clx(mod_22, 1, dta_2$murdock_name)
-ee2_22 <- mclx(mod_22, 1, dta_2$murdock_name, dta_2$district)
+               as.factor(isocode), data = dta_22)
+ee1_22 <- clx(mod_22, 1, dta_22$murdock_name)
+ee2_22 <- mclx(mod_22, 1, dta_22$murdock_name, dta_22$district)
 
 # M2.3
 mod_23 <- lm(trust_local_council ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
                as.factor(religion) + as.factor(occupation) +
                district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode), data = dta_2)
-ee1_23 <- clx(mod_23, 1, dta_2$murdock_name)
-ee2_23 <- mclx(mod_23, 1, dta_2$murdock_name, dta_2$district)
+               as.factor(isocode), data = dta_23)
+ee1_23 <- clx(mod_23, 1, dta_23$murdock_name)
+ee2_23 <- mclx(mod_23, 1, dta_23$murdock_name, dta_23$district)
 
 # M2.4
 mod_24 <- lm(intra_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
                as.factor(religion) + as.factor(occupation) +
                district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode), data = dta_2)
-ee1_24 <- clx(mod_24, 1, dta_2$murdock_name)
-ee2_24 <- mclx(mod_24, 1, dta_2$murdock_name, dta_2$district)
+               as.factor(isocode), data = dta_24)
+ee1_24 <- clx(mod_24, 1, dta_24$murdock_name)
+ee2_24 <- mclx(mod_24, 1, dta_24$murdock_name, dta_24$district)
 
 # M2.5
 mod_25 <- lm(inter_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
                as.factor(religion) + as.factor(occupation) +
                district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode), data = dta_2)
-ee1_25 <- clx(mod_25, 1, dta_2$murdock_name)
-ee2_25 <- mclx(mod_25, 1, dta_2$murdock_name, dta_2$district)
+               as.factor(isocode), data = dta_25)
+ee1_25 <- clx(mod_25, 1, dta_25$murdock_name)
+ee2_25 <- mclx(mod_25, 1, dta_25$murdock_name, dta_25$district)
 
 ```
 
@@ -399,6 +447,11 @@ resultados.
 dependientes mediante el uso de la variable instrumental. Ahora deberá
 replicar los resultados de la tabla 5 del artículo. Tome en cuanta cómo
 debe incorporar controles para cada especificación.
+
+```{r}
+
+```
+
 
 **9.** Finalmente, realice las pruebas de diagnóstico convencionales sobre ins-
 trumentos débiles. Utilce las funciones disponibles en el paquete ivreg de
