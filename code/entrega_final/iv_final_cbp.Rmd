@@ -170,8 +170,8 @@ mclx <-
 
 Siguiendo a Nunn & Wantchekon, se calcula el primer modelo de regresión lineal,
 que busca medir el efecto del comercio de esclavos en la confianza de los africanos
-en sus vecinos.
-Para replicar la tabla 1 se estima el mismo modelo pero cambiando la variable
+en sus **vecinos**.
+Para replicar la Tabla 1 se estima el mismo modelo pero cambiando la variable
 dependiente:
 
 ```{r}
@@ -182,7 +182,7 @@ dta1 <- dta %>% select(trust_neighbors, exports, age, age2, male,
                       frac_ethnicity_in_district, isocode,
                       murdock_name, district) %>% na.omit()
   
-# Table 1: Trust Relatives (Column 1)
+# Trust of neighbors
 m1_vec <- lm(trust_neighbors ~ exports + age + age2 + male + urban_dum 
              + as.factor(education) + as.factor(occupation) +
                as.factor(religion) + as.factor(living_conditions) +
