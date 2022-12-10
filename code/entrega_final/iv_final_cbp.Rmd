@@ -183,6 +183,7 @@ dta1 <- dta %>% select(trust_neighbors, exports, age, age2, male,
                       murdock_name, district) %>% na.omit()
   
 # Trust of neighbors
+
 m1_vec <- lm(trust_neighbors ~ exports + age + age2 + male + urban_dum 
              + as.factor(education) + as.factor(occupation) +
                as.factor(religion) + as.factor(living_conditions) +
