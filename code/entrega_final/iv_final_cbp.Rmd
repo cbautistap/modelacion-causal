@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ```{r}
@@ -15,6 +15,7 @@ library(stargazer)
 library(dagitty)
 library(AER)
 library(haven)
+library(kableExtra)
 ```
 
 
@@ -89,10 +90,16 @@ miento. Tome en cuenta que hay un grupo de variables numéricas y otras
 categóricas que deben ser descritas de manera particular de acuerdo a su
 naturaleza.
 
+Se genera resumen estadístico de las variables numéricas:
+
 ```{r}
 dta <- read_dta("data/slavetrade.dta")
 attach(dta)
 
+dta %>% select_if(is.numeric) %>% summary() 
+```
+Resumen estadístico variables
+```{r}
 
 ```
 
@@ -103,6 +110,11 @@ in neighbours, trust in in the local council), la variable de trata-
 miento slave exports y la variable instrumental distance to the see.
 Analice su comportamiento e interprete sus resultados.
 
+```{r}
+
+```
+
+
 **5.** Obtenga las estimaciones por mínimos cuadrados ordinarios para los de-
 terminantes de la variable Trust of neighbors. Esto es, replique los re-
 sultados de la tabla 1 del artículo. Tome en cuenta la corrección que se
@@ -111,6 +123,87 @@ al menos los dos primeros utilizando las funciones en R de Arai (2015) clx
 y mclx. Tal como refiere el artículo, los primeros errores estándar robustos
 consideran sólo heterogeneidad por el nombre de comunidad, los segundos
 lo hacen por nombre de comunidad y distrito.
+
+Funciones de Arai (2015):
+
+```{r}
+# One-way cluster function (Arai 2015)
+clx <-
+  function(fm, dfcw, cluster){
+    library(sandwich)
+    library(lmtest)
+    M <- length(unique(cluster))
+    N <- length(cluster)
+    dfc <- (M/(M-1))*((N-1)/(N-fm$rank))
+    u <- apply(estfun(fm),2,
+               function(x) tapply(x, cluster, sum))
+    vcovCL <- dfc*sandwich(fm, meat=crossprod(u)/N)*dfcw
+    coeftest(fm, vcovCL) }
+
+
+# Two-way cluster function (Arai 2015)
+mclx <-
+  function(fm, dfcw, cluster1, cluster2){
+    library(sandwich)
+    library(lmtest)
+    cluster12 = paste(cluster1,cluster2, sep="")
+    M1 <- length(unique(cluster1))
+    M2 <- length(unique(cluster2))
+    M12 <- length(unique(cluster12))
+    N <- length(cluster1)
+    K <- fm$rank
+    dfc1 <- (M1/(M1-1))*((N-1)/(N-K))
+    dfc2 <- (M2/(M2-1))*((N-1)/(N-K))
+    dfc12 <- (M12/(M12-1))*((N-1)/(N-K))
+    u1 <- apply(estfun(fm), 2,
+                function(x) tapply(x, cluster1, sum))
+    u2 <- apply(estfun(fm), 2,
+                function(x) tapply(x, cluster2, sum))
+    u12 <- apply(estfun(fm), 2,
+                 function(x) tapply(x, cluster12, sum))
+    vc1 <- dfc1*sandwich(fm, meat=crossprod(u1)/N )
+    vc2 <- dfc2*sandwich(fm, meat=crossprod(u2)/N )
+    vc12 <- dfc12*sandwich(fm, meat=crossprod(u12)/N)
+    vcovMCL <- (vc1 + vc2 - vc12)*dfcw
+    coeftest(fm, vcovMCL)}
+```
+
+Siguiendo a Nunn & Wantchekon, se calcula el primer modelo de regresión lineal,
+que busca medir el efecto del comercio de esclavos en la confianza de los africanos
+en sus vecinos.
+Para replicar la tabla 1 se estima el mismo modelo pero cambiando la variable
+dependiente:
+
+```{r}
+
+dta1 <- dta %>% select(trust_neighbors, exports, age, age2, male,
+                      urban_dum, education, occupation, religion,
+                      living_conditions, district_ethnic_frac,
+                      frac_ethnicity_in_district, isocode,
+                      murdock_name, district) %>% na.omit()
+  
+# Table 1: Trust Relatives (Column 1)
+m1_vec <- lm(trust_neighbors ~ exports + age + age2 + male + urban_dum 
+             + as.factor(education) + as.factor(occupation) +
+               as.factor(religion) + as.factor(living_conditions) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), 
+             data = dta1)
+  
+# Errores estándar usando Arai (2015)
+ee_etnia <- clx(m1_vec, 1, dta1$murdock_name)
+
+ee_etnia_distrito <- mclx(m1_vec, 1, dta1$murdock_name, dta1$district)
+
+  
+```
+
+Se reportan resultados
+```{r}
+stargazer(m1_vec, type = "text",
+          se = list(ee_etnia[,2], ee_etnia_distrito[,2]),
+          digits = 5)
+```
 
 **6.** Ahora repita la estimación por mínimos cuadrados ordinarios pero para
 los determinantes de la variable Trust of others. Esto es, en la medida 
