@@ -233,15 +233,67 @@ mod_13 <- lm(trust_neighbors ~ export_pop + age + age2 + male + urban_dum +
 
 ee1_13 <- clx(mod_13, 1, dta_13$murdock_name)
 ee2_13 <- mclx(mod_13, 1, dta_13$murdock_name, dta_13$district)
+
+# M1.4
+dta_14 <- dta %>% select(trust_neighbors, #export_pop,
+                       ln_exports, #ln_export_area, ln_export_pop,
+                       age, age2, male,
+                       urban_dum, education, occupation, religion,
+                       living_conditions, district_ethnic_frac,
+                       frac_ethnicity_in_district, isocode,
+                       murdock_name, district) %>% na.omit()
+mod_14 <- lm(trust_neighbors ~ ln_exports + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_14)
+
+ee1_14 <- clx(mod_14, 1, dta_14$murdock_name)
+ee2_14 <- mclx(mod_14, 1, dta_14$murdock_name, dta_14$district)
+
+# M1.5
+dta_15 <- dta %>% select(trust_neighbors, #export_pop,
+                       ln_export_area, #ln_export_pop,
+                       age, age2, male,
+                       urban_dum, education, occupation, religion,
+                       living_conditions, district_ethnic_frac,
+                       frac_ethnicity_in_district, isocode,
+                       murdock_name, district) %>% na.omit()
+mod_15 <- lm(trust_neighbors ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_15)
+
+ee1_15 <- clx(mod_15, 1, dta_15$murdock_name)
+ee2_15 <- mclx(mod_14, 1, dta_15$murdock_name, dta_15$district)
+
+# M1.4
+dta_16 <- dta %>% select(trust_neighbors, ln_export_pop, age, age2, male,
+                       urban_dum, education, occupation, religion,
+                       living_conditions, district_ethnic_frac,
+                       frac_ethnicity_in_district, isocode,
+                       murdock_name, district) %>% na.omit()
+mod_16 <- lm(trust_neighbors ~ ln_export_pop + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_16)
+
+ee1_16 <- clx(mod_16, 1, dta_16$murdock_name)
+ee2_16 <- mclx(mod_16, 1, dta_16$murdock_name, dta_16$district)
 ```
 
 Se reportan resultados:
 ```{r}
-stargazer(mod_11, mod_12, mod_13, type = "text",
+stargazer(mod_11, mod_12, mod_13, mod_14, mod_15, mod_16, type = "text",
           se = list(c(ee1_11[,2], ee2_11[,2]), 
                     c(ee1_12[,2], ee2_12[,2]),
-                    c(ee1_13[,2], ee2_13[,2])),
-          digits = 5)
+                    c(ee1_13[,2], ee2_13[,2]),
+                    c(ee1_14[,2], ee2_14[,2]),
+                    c(ee1_15[,2], ee2_15[,2]),
+                    c(ee1_16[,2], ee2_16[,2])),
+                    digits = 5, keep = 1:6)
 ```
 
 **6.** Ahora repita la estimación por mínimos cuadrados ordinarios pero para
