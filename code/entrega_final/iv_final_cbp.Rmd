@@ -171,8 +171,8 @@ mclx <-
 Siguiendo a Nunn & Wantchekon, se calcula el primer modelo de regresión lineal,
 que busca medir el efecto del comercio de esclavos en la confianza de los africanos
 en sus **vecinos**.
-Para replicar la Tabla 1 se estima el mismo modelo pero cambiando la variable
-dependiente:
+Para replicar la Tabla 1 se estima el mismo modelo pero evaluando con distintas
+transformaciones de la variable de tratamiento (comercio de esclavos):
 
 ```{r}
 # Tabla 1, modelo 1 (M1.1). seleccionamos variables de interés
@@ -293,7 +293,9 @@ stargazer(mod_11, mod_12, mod_13, mod_14, mod_15, mod_16, type = "text",
                     c(ee1_14[,2], ee2_14[,2]),
                     c(ee1_15[,2], ee2_15[,2]),
                     c(ee1_16[,2], ee2_16[,2])),
-                    digits = 5, keep = 1:6)
+                    digits = 5, 
+                    keep = c("exports", "export_area", "export_pop",
+                             "ln_exports", "ln_export_area", "ln_export_pop"))
 ```
 
 **6.** Ahora repita la estimación por mínimos cuadrados ordinarios pero para
@@ -301,11 +303,97 @@ los determinantes de la variable Trust of others. Esto es, en la medida
 de lo posible, replique los resultados de la tabla 2. Compare e interprete
 los resultados que obtuvo en este inciso con los del anterior.
 
+Siguiendo a los autores, se utilizará de aquí en adelante el modelo "base",
+que utiliza como variable de tratamiento al logaritmo natural de las 
+exportaciones de esclavos normalizadas por el área...
+Asimismo, para el resto de los ejercicios se utilizan los errores estándar robustos
+de etnia y distrito.
+
+Ahora se busca medir el efecto causal del comercio de esclavos sobre la
+confianza en "otros", que incluye 1, 2, 3... Es decir, cambiamos la variable 
+dependiente.
+
+```{r}
+# filtramos datos para obtener variables de interés. En este caso, podemos generar 
+# una sola bd dado que utilizaremos solo a ln_export_area como variable de tratamiento
+dta_2 <- dta %>% select(trust_relatives, trust_neighbors, trust_local_council,
+                    intra_group_trust, inter_group_trust, ln_export_area, 
+                    age, age2, male, urban_dum, education, occupation, religion,
+                    living_conditions, district_ethnic_frac,
+                    frac_ethnicity_in_district, isocode, murdock_name,
+                    district) %>% na.omit()
+
+# Tabla 2, modelo 1 (M2.1)
+mod_21 <- lm(trust_relatives ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_2)
+ee1_21 <- clx(mod_21, 1, dta_2$murdock_name)
+ee2_21 <- mclx(mod_21, 1, dta_2$murdock_name, dta_2$district)
+
+# M2.2
+mod_22 <- lm(trust_neighbors ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_2)
+ee1_22 <- clx(mod_22, 1, dta_2$murdock_name)
+ee2_22 <- mclx(mod_22, 1, dta_2$murdock_name, dta_2$district)
+
+# M2.3
+mod_23 <- lm(trust_local_council ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_2)
+ee1_23 <- clx(mod_23, 1, dta_2$murdock_name)
+ee2_23 <- mclx(mod_23, 1, dta_2$murdock_name, dta_2$district)
+
+# M2.4
+mod_24 <- lm(intra_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_2)
+ee1_24 <- clx(mod_24, 1, dta_2$murdock_name)
+ee2_24 <- mclx(mod_24, 1, dta_2$murdock_name, dta_2$district)
+
+# M2.5
+mod_25 <- lm(inter_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_2)
+ee1_25 <- clx(mod_25, 1, dta_2$murdock_name)
+ee2_25 <- mclx(mod_25, 1, dta_2$murdock_name, dta_2$district)
+
+```
+
+Se reportan resultados:
+
+```{r}
+stargazer(mod_21, mod_22, mod_23, mod_24, mod_25, type = "text",
+          se = list(c(ee1_21[,2], ee2_21[,2]), 
+                    c(ee1_22[,2], ee2_22[,2]),
+                    c(ee1_23[,2], ee2_23[,2]),
+                    c(ee1_24[,2], ee2_24[,2]),
+                    c(ee1_25[,2], ee2_25[,2])),
+                    digits = 3, 
+                    keep = c("ln_export_area"))
+```
+
+
 **7.** Analice la variable instrumental a detalle. Utilice regresiones de mínimos
 cuadrados ordinarios para revisar si el instrumento afecta a la variable
 de tratamiento slave exports. También revise si el instrumento afecta a
 cada una de las variables dependientes de confianza. Analice y discuta sus
 resultados.
+
+```{r}
+
+```
+
 
 **8.** Uitilice su instrumento para realizar ahora los modelos para las variables
 dependientes mediante el uso de la variable instrumental. Ahora deberá
