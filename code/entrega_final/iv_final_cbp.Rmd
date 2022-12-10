@@ -175,34 +175,51 @@ Para replicar la Tabla 1 se estima el mismo modelo pero cambiando la variable
 dependiente:
 
 ```{r}
-
-dta1 <- dta %>% select(trust_neighbors, exports, age, age2, male,
-                      urban_dum, education, occupation, religion,
-                      living_conditions, district_ethnic_frac,
-                      frac_ethnicity_in_district, isocode,
-                      murdock_name, district) %>% na.omit()
+# Modelo 1 de tabla 1 (M1.1). seleccionamos variables de interés
+dta_11 <- dta %>% select(trust_neighbors, exports, #export_area, export_pop,
+                       #ln_exports, ln_export_area, ln_export_pop,
+                       age, age2, male,
+                       urban_dum, education, occupation, religion,
+                       living_conditions, district_ethnic_frac,
+                       frac_ethnicity_in_district, isocode,
+                       murdock_name, district) %>% na.omit()
   
-# Trust of neighbors
-
-m1_vec <- lm(trust_neighbors ~ exports + age + age2 + male + urban_dum 
-             + as.factor(education) + as.factor(occupation) +
-               as.factor(religion) + as.factor(living_conditions) +
+# MTrust of neighbors
+mod_11 <- lm(trust_neighbors ~ exports + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) + 
+               as.factor(religion) + as.factor(occupation) +
                district_ethnic_frac + frac_ethnicity_in_district +
                as.factor(isocode), 
-             data = dta1)
-  
+             data = dta_11)
+
+
 # Errores estándar usando Arai (2015)
-ee_etnia <- clx(m1_vec, 1, dta1$murdock_name)
+ee1_11 <- clx(mod_11, 1, dta_11$murdock_name)
+ee2_11 <- mclx(mod_11, 1, dta_11$murdock_name, dta_11$district)
 
-ee_etnia_distrito <- mclx(m1_vec, 1, dta1$murdock_name, dta1$district)
+#summary(mod_11)  
+#ee1_11
 
+dta_1b <- dta %>% select(trust_neighbors, export_area, #export_pop,
+                       #ln_exports, ln_export_area, ln_export_pop,
+                       age, age2, male,
+                       urban_dum, education, occupation, religion,
+                       living_conditions, district_ethnic_frac,
+                       frac_ethnicity_in_district, isocode,
+                       murdock_name, district) %>% na.omit()
+m2_vec <- lm(trust_neighbors ~ export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode), data = dta_1b)
   
+
 ```
 
-Se reportan resultados
+Se reportan resultados:
 ```{r}
-stargazer(m1_vec, type = "text",
-          se = list(ee_etnia[,2], ee_etnia_distrito[,2]),
+stargazer(mod_11, type = "text",
+          se = list(ee1_11[,2], ee2_11[,2]),
           digits = 5)
 ```
 
