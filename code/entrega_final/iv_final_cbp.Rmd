@@ -608,54 +608,15 @@ stargazer(mod_51, mod_52, mod_53, mod_54, mod_55,
 ```
 
 
-```{r}
-# All 5 oucome variable
-outcome.vars <- c("trust_relatives", "trust_neighbors")
-
-baseline.controls <- "age + age2 + male + urban_dum + as.factor(education) + as.factor(occupation) + as.factor(religion) + as.factor(living_conditions) + district_ethnic_frac + frac_ethnicity_in_district + as.factor(isocode)"
-
-
-
-colonial.controls <- "malaria_ecology + total_missions_area + explorer_contact + railway_contact + cities_1400_dum + as.factor(v30) + v33"
-
-
-
-
-controls <- paste(baseline.controls, " + ", 
-                  colonial.controls, 
-                  " + ln_init_pop_density", 
-                  sep="")
-
-d2 <- d %>% dplyr::select(trust_relatives, trust_neighbors, 
-                   ln_export_area, age, 
-                  age2, male, urban_dum, distsea,
-                  education, occupation, religion, living_conditions,
-                  district_ethnic_frac, frac_ethnicity_in_district,
-                  isocode, malaria_ecology, total_missions_area,
-                  explorer_contact, railway_contact, cities_1400_dum,
-                  v30, v33, ln_init_pop_density, murdock_name,
-                  district)
-d2 <- na.omit(d2)
-
-# Loop: Creates model which is then inserted in the ivreg function.
-for(i in 1:2){
-  model <- 
-    paste(
-      outcome.vars[i], 
-      " ~ ln_export_area + ", controls, " | ", controls, "+ distsea",
-      sep = "")
-  # print(model) # show while loop runs
-  
-    # fit model in loop
-    assign(paste("fit", i, sep=""), # assign to new object
-           ivreg(model, data = d2))
-}
-```
-
-
 **9.** Finalmente, realice las pruebas de diagnóstico convencionales sobre ins-
 trumentos débiles. Utilce las funciones disponibles en el paquete ivreg de
 R. Interprete sus resultados y concluya en el contexto del problema.
+
+
+```{r}
+
+```
+
 
 **10.** Escriba la conclusión general del análisis realizado. Interprete la cuanti-
 ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
