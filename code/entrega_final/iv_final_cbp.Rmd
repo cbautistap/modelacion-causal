@@ -448,8 +448,208 @@ dependientes mediante el uso de la variable instrumental. Ahora deberá
 replicar los resultados de la tabla 5 del artículo. Tome en cuanta cómo
 debe incorporar controles para cada especificación.
 
-```{r}
 
+```{r}
+dta_51 <- dta %>% select(trust_relatives, 
+                         #trust_neighbors, 
+                         #trust_local_council,
+                    #intra_group_trust, 
+                    #inter_group_trust, 
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district, 
+                    isocode, murdock_name, district, distsea,
+                    malaria_ecology, total_missions_area, explorer_contact,
+                    railway_contact, cities_1400_dum, v30, v33, 
+                    ln_init_pop_density) %>% na.omit()
+
+dta_52 <- dta %>% select(#trust_relatives, 
+                         trust_neighbors, 
+                         #trust_local_council,
+                    #intra_group_trust, 
+                    #inter_group_trust, 
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district, 
+                    isocode, murdock_name, district, distsea,
+                    malaria_ecology, total_missions_area, explorer_contact,
+                    railway_contact, cities_1400_dum, v30, v33, 
+                    ln_init_pop_density) %>% na.omit()
+
+dta_53 <- dta %>% select(#trust_relatives, 
+                         #trust_neighbors, 
+                         trust_local_council,
+                    #intra_group_trust, 
+                    #inter_group_trust, 
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district, 
+                    isocode, murdock_name, district, distsea,
+                    malaria_ecology, total_missions_area, explorer_contact,
+                    railway_contact, cities_1400_dum, v30, v33, 
+                    ln_init_pop_density) %>% na.omit()
+
+dta_54 <- dta %>% select(#trust_relatives, 
+                         #trust_neighbors, 
+                         #trust_local_council,
+                    intra_group_trust, 
+                    #inter_group_trust, 
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district, 
+                    isocode, murdock_name, district, distsea,
+                    malaria_ecology, total_missions_area, explorer_contact,
+                    railway_contact, cities_1400_dum, v30, v33, 
+                    ln_init_pop_density) %>% na.omit()
+
+dta_55 <- dta %>% select(#trust_relatives, 
+                         #trust_neighbors, 
+                         #trust_local_council,
+                    #intra_group_trust, 
+                    inter_group_trust, 
+                    ln_export_area, age, age2, male, urban_dum, education, 
+                    occupation, religion, living_conditions, 
+                    district_ethnic_frac, frac_ethnicity_in_district, 
+                    isocode, murdock_name, district, distsea,
+                    malaria_ecology, total_missions_area, explorer_contact,
+                    railway_contact, cities_1400_dum, v30, v33, 
+                    ln_init_pop_density) %>% na.omit()
+
+mod_51 <- ivreg(trust_relatives ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+               data = dta_51)
+mod_52 <- ivreg(trust_neighbors ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+               data = dta_52)
+mod_53 <- ivreg(trust_local_council ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+               data = dta_53)
+mod_54 <- ivreg(intra_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+               data = dta_54)
+mod_55 <- ivreg(inter_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
+               as.factor(living_conditions) + as.factor(education) +
+               as.factor(religion) + as.factor(occupation) +
+               district_ethnic_frac + frac_ethnicity_in_district +
+               as.factor(isocode) + malaria_ecology + total_missions_area +
+                 explorer_contact + railway_contact + cities_1400_dum +
+                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+               data = dta_55)
+
+# usamos errores estándar de etnia y distrito
+ee2_51 <- mclx(mod_51, 1, dta_51$murdock_name, dta_51$district)
+ee2_52 <- mclx(mod_52, 1, dta_52$murdock_name, dta_52$district)
+ee2_53 <- mclx(mod_53, 1, dta_53$murdock_name, dta_53$district)
+ee2_54 <- mclx(mod_54, 1, dta_54$murdock_name, dta_54$district)
+ee2_55 <- mclx(mod_55, 1, dta_55$murdock_name, dta_55$district)
+```
+
+Reportamos resultados:
+```{r}
+stargazer(mod_51, mod_52, mod_53, mod_54, mod_55, 
+          type = "text",
+          se = list(ee2_51[,2], 
+                    ee2_52[,2],
+                    ee2_53[,2],
+                    ee2_54[,2],
+                    ee2_55[,2]),
+                    digits = 3, 
+                    keep = c("ln_export_area"))
+```
+
+
+```{r}
+# All 5 oucome variable
+outcome.vars <- c("trust_relatives", "trust_neighbors")
+
+baseline.controls <- "age + age2 + male + urban_dum + as.factor(education) + as.factor(occupation) + as.factor(religion) + as.factor(living_conditions) + district_ethnic_frac + frac_ethnicity_in_district + as.factor(isocode)"
+
+
+
+colonial.controls <- "malaria_ecology + total_missions_area + explorer_contact + railway_contact + cities_1400_dum + as.factor(v30) + v33"
+
+
+
+
+controls <- paste(baseline.controls, " + ", 
+                  colonial.controls, 
+                  " + ln_init_pop_density", 
+                  sep="")
+
+d2 <- d %>% dplyr::select(trust_relatives, trust_neighbors, 
+                   ln_export_area, age, 
+                  age2, male, urban_dum, distsea,
+                  education, occupation, religion, living_conditions,
+                  district_ethnic_frac, frac_ethnicity_in_district,
+                  isocode, malaria_ecology, total_missions_area,
+                  explorer_contact, railway_contact, cities_1400_dum,
+                  v30, v33, ln_init_pop_density, murdock_name,
+                  district)
+d2 <- na.omit(d2)
+
+# Loop: Creates model which is then inserted in the ivreg function.
+for(i in 1:2){
+  model <- 
+    paste(
+      outcome.vars[i], 
+      " ~ ln_export_area + ", controls, " | ", controls, "+ distsea",
+      sep = "")
+  # print(model) # show while loop runs
+  
+    # fit model in loop
+    assign(paste("fit", i, sep=""), # assign to new object
+           ivreg(model, data = d2))
+}
 ```
 
 
