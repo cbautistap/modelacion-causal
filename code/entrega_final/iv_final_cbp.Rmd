@@ -439,7 +439,10 @@ cada una de las variables dependientes de confianza. Analice y discuta sus
 resultados.
 
 ```{r}
+iv_exports <- lm(exports ~ distsea, data = dta, na.action = na.omit)
+iv_ln_export_area <- lm(ln_export_area ~ distsea, data = dta, na.action = na.omit)
 
+stargazer(iv_exports, iv_ln_export_area, type = "text")
 ```
 
 
@@ -612,9 +615,10 @@ stargazer(mod_51, mod_52, mod_53, mod_54, mod_55,
 trumentos débiles. Utilce las funciones disponibles en el paquete ivreg de
 R. Interprete sus resultados y concluya en el contexto del problema.
 
+HAUSMANN???
 
 ```{r}
-
+summary(mod_51, diagnostics = TRUE)
 ```
 
 
