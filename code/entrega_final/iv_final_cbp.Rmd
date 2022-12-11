@@ -445,6 +445,7 @@ iv_ln_export_area <- lm(ln_export_area ~ distsea, data = dta, na.action = na.omi
 stargazer(iv_exports, iv_ln_export_area, type = "text")
 ```
 
+Sí afecta, y es lo que esperamos. Compararemos contra el modelo más especificado
 
 ```{r}
 iv_rel <- lm(trust_relatives ~ distsea, data = dta, na.action = na.omit)
@@ -549,13 +550,8 @@ mod_52 <- ivreg(trust_neighbors ~ ln_export_area + age + age2 + male + urban_dum
                district_ethnic_frac + frac_ethnicity_in_district +
                as.factor(isocode) + malaria_ecology + total_missions_area +
                  explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
-               as.factor(living_conditions) + as.factor(education) +
-               as.factor(religion) + as.factor(occupation) +
-               district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode) + malaria_ecology + total_missions_area +
-                 explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+                 as.factor(v30) + v33 + ln_init_pop_density | . - ln_export_area +
+                 distsea, 
                data = dta_52)
 mod_53 <- ivreg(trust_local_council ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
@@ -563,13 +559,8 @@ mod_53 <- ivreg(trust_local_council ~ ln_export_area + age + age2 + male + urban
                district_ethnic_frac + frac_ethnicity_in_district +
                as.factor(isocode) + malaria_ecology + total_missions_area +
                  explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
-               as.factor(living_conditions) + as.factor(education) +
-               as.factor(religion) + as.factor(occupation) +
-               district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode) + malaria_ecology + total_missions_area +
-                 explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+                 as.factor(v30) + v33 + ln_init_pop_density | . - ln_export_area +
+                 distsea, 
                data = dta_53)
 mod_54 <- ivreg(intra_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
@@ -577,13 +568,8 @@ mod_54 <- ivreg(intra_group_trust ~ ln_export_area + age + age2 + male + urban_d
                district_ethnic_frac + frac_ethnicity_in_district +
                as.factor(isocode) + malaria_ecology + total_missions_area +
                  explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
-               as.factor(living_conditions) + as.factor(education) +
-               as.factor(religion) + as.factor(occupation) +
-               district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode) + malaria_ecology + total_missions_area +
-                 explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+                 as.factor(v30) + v33 + ln_init_pop_density | . - ln_export_area +
+                 distsea,
                data = dta_54)
 mod_55 <- ivreg(inter_group_trust ~ ln_export_area + age + age2 + male + urban_dum +
                as.factor(living_conditions) + as.factor(education) +
@@ -591,13 +577,8 @@ mod_55 <- ivreg(inter_group_trust ~ ln_export_area + age + age2 + male + urban_d
                district_ethnic_frac + frac_ethnicity_in_district +
                as.factor(isocode) + malaria_ecology + total_missions_area +
                  explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density | age + age2 + male + urban_dum +
-               as.factor(living_conditions) + as.factor(education) +
-               as.factor(religion) + as.factor(occupation) +
-               district_ethnic_frac + frac_ethnicity_in_district +
-               as.factor(isocode) + malaria_ecology + total_missions_area +
-                 explorer_contact + railway_contact + cities_1400_dum +
-                 as.factor(v30) + v33 + ln_init_pop_density + distsea, 
+                 as.factor(v30) + v33 + ln_init_pop_density | . - ln_export_area +
+                 distsea,
                data = dta_55)
 
 # usamos errores estándar de etnia y distrito
@@ -626,10 +607,20 @@ stargazer(mod_51, mod_52, mod_53, mod_54, mod_55,
 trumentos débiles. Utilce las funciones disponibles en el paquete ivreg de
 R. Interprete sus resultados y concluya en el contexto del problema.
 
-HAUSMANN???
+Calculamos estadístico F de la regresión de primera etapa y observamos que para 
+ambas variables de interés, `exports` y su transformación `ln_export_area`,
+el valor es significativamente mayor a 10. Por lo que podemos afirmar que es 
+un instrumento fuerte.
 
 ```{r}
-summary(mod_51, diagnostics = TRUE)
+#summary(mod_51, diagnostics = TRUE)
+# Regresión de la primera etapa
+iv_test1 <- linearHypothesis(iv_exports, "distsea = 0", vcov = vcovHC, type = "HC1")
+iv_test2 <- linearHypothesis(iv_ln_export_area, "distsea = 0", vcov = vcovHC, type = "HC1")
+
+
+# imprime resultados de estadístico F de la 1SLS 
+print(c(iv_test1$F, iv_test2$F))
 ```
 
 
