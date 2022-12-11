@@ -446,6 +446,17 @@ stargazer(iv_exports, iv_ln_export_area, type = "text")
 ```
 
 
+```{r}
+iv_rel <- lm(trust_relatives ~ distsea, data = dta, na.action = na.omit)
+iv_neig <- lm(trust_neighbors ~ distsea, data = dta, na.action = na.omit)
+iv_lc <- lm(trust_local_council ~ distsea, data = dta, na.action = na.omit)
+iv_intra <- lm(intra_group_trust ~ distsea, data = dta, na.action = na.omit)
+iv_inter <- lm(inter_group_trust ~ distsea, data = dta, na.action = na.omit)
+
+stargazer(iv_rel, iv_neig, iv_lc, iv_intra, iv_inter, type = "text")
+```
+
+
 **8.** Uitilice su instrumento para realizar ahora los modelos para las variables
 dependientes mediante el uso de la variable instrumental. Ahora deberá
 replicar los resultados de la tabla 5 del artículo. Tome en cuanta cómo
