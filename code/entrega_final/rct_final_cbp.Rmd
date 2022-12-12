@@ -64,15 +64,12 @@ Por ello, los autores han elegido las siguientes hipótesis de trabajo:
 1. Las personas tienden a creer más en las noticias de una fuente real que de
 una fuente falsa.
 
-
 2. Las personas serán más propensas a compartir informes de noticias que
 provienen de fuentes reales que aquellos que provienen de fuentes falsas.
-
 
 3. Las personas que vieron noticias congruentes (versus incongruentes) de
 una fuente tienen una mayor tendencia a creer y compartir noticias pos-
 teriores de la misma fuente.
-
 
 4. La diferencia en la creencia y en la propensión a compartir noticias poste-
 riores entre aquellos que vieron informes congruentes y aquellos que vieron
@@ -129,6 +126,8 @@ descritas de manera particular de acuerdo a su naturaleza (ver apéndice
 ```{r}
 dta <- read_csv("data/fake.csv")
 attach(dta)
+
+dta %>% select_if(is.numeric) %>% summary()
 ```
 
 
