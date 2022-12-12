@@ -1,0 +1,11 @@
+---
+title: "Entrega final. Regresión discontinua"
+author: "Carlos Bautista"
+date: '2022-10-12'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
