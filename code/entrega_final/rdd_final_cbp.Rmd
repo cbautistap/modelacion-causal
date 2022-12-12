@@ -102,7 +102,7 @@ tratamiento y de control.
 
 ```{r}
 ggplot(dta, aes(x = rv, y = dv_money)) +
-  geom_point(aes(color = treat)) +
+  geom_point(aes(color = as.factor(treat))) +
   labs(x= "score", y ="prop. donaciones")
 ```
 
