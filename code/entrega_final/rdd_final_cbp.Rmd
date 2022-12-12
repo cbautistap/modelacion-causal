@@ -12,7 +12,10 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```{r}
 library(dagitty)
 library(tidyverse)
-
+library(rdd)
+library(rdrobust)
+library(rddensity)
+library(stargazer)
 ```
 
 **a. Artículo de Referencia**
@@ -90,7 +93,7 @@ dta <- dta %>% filter(statelevel == 1)
 #dta_short <- dta %>% select(statelevel, rv, dv_money, total_race_money, total_votes,
 #                      dem_inc, rep_inc, total_group_money, treat)
 attach(dta)
-attach(dta_short)
+#attach(dta_short)
 
 dta %>% select_if(is.numeric) %>% summary
 ```
@@ -124,6 +127,12 @@ ggplot(dta, aes(x = rv, fill = as.factor(treat))) +
   geom_histogram(binwidth = 0.7) +
   geom_vline(xintercept = 0) +
   xlim(-30, 30)
+```
+
+
+```{r}
+density <- rddensity(X = rv)
+summary(density)
 ```
 
 
