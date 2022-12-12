@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 ```{r}
-library()
+library(tidyverse)
+library(dagitty)
 ```
 
 **a. Artículo de Referencia**
@@ -99,14 +100,23 @@ y_... y las covariables x_...
 **1.** Escriba una introducción del análisis que realizará con ayuda de este con-
 junto de datos de acuerdo al contexto del problema.
 
+CBP
+
 **2.** Ilustre correctamente los factores considerados en dicho análisis. Para ello,
 realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
 detrás de la relación causal que busca analizar y cuantificar el artículo.
+
+```{r}
+
+```
+
 
 **3.** Describa de manera general el diseño del experimento aleatorizado: parti-
 cipantes, variables de respuesta, clasificación de grupos de tratamiento y
 control y covariables. Mencione cómo se implementó el experimento en la
 práctica.
+
+CBP
 
 **4.** Luego de leer el conjunto de datos, empiece por realizar el análisis ex-
 ploratorio de las variables y describa su comportamiento. Tome en cuenta
@@ -114,18 +124,38 @@ que hay un grupo de variables numéricas y otras categóricas que deben ser
 descritas de manera particular de acuerdo a su naturaleza (ver apéndice
 2).
 
+```{r}
+
+```
+
+
 **5.** Realice los cuadros de balance para verificar la aleatorización del experi-
 mento. Replique, en la medida de lo posible los cuadros del apéndice 3.
 Interprete sus resultados.
+
+```{r}
+
+```
+
 
 **6.** Dado que los supuestos SUTVA e independencia son válidos, compare el
 resultado promedio en el tratamiento y el control mediante pruebas simples
 t. Para ello, en R puede utilizar la función t.test().
 
+```{r}
+
+```
+
+
 **7.** Muestre gráficamente los efectos que tiene la fuente en la posibilidad de
 creer en las noticias y en la propensión a compartirlas. Esto es, replique
 los gráficos de la figura 3 (pág. 13). Interprete estos resultados y concluya
 en el contexto del problema de acuerdo a las hipótesis planteadas.
+
+```{r}
+
+```
+
 
 **8.** Ahora obtenga estos mismos resultados pero implementando sus cálculos
 mediante la estimación adecuada de mínimos cuadrados ordinarios. Inclu-
@@ -135,9 +165,19 @@ de la interacción. Esto es, replique los resultados de las tablas del anexo 9.
 del problema de acuerdo a las hipótesis del estudio. No olvide comparar
 mediante pruebas tlos efectos para cada una de las redes sociales.
 
+```{r}
+
+```
+
+
 **9.** Hay dos covariables más aún no utilizadas (educación e ingreso). Realice
 algún análisis para identificar si tiene alguna significancia el incluirlas
 como controles.
+
+```{r}
+
+```
+
 
 **10.** Escriba la conclusión general del análisis realizado. Interprete la cuanti-
 ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
