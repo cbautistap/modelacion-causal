@@ -157,7 +157,8 @@ t. Para ello, en R puede utilizar la función t.test().
 
 ```{r}
 dta_resp <- c('y_belief_report_num', 'y_share_report_email_num', 
-              'y_share_report_fb_num')
+              'y_share_report_fb_num', 'y_share_report_twitter_num',
+              'y_share_report_whatsapp_num')
 
 lapply(dta[, dta_resp],
        function(v) {t.test(v ~ dta$d_treatment_source, var.equal = TRUE)})
@@ -170,38 +171,156 @@ los gráficos de la figura 3 (pág. 13). Interprete estos resultados y concluya
 en el contexto del problema de acuerdo a las hipótesis planteadas.
 
 ```{r}
-# Produce the data for the plot
-  dta_graf <- dta %>% 
+#belief
+dta_graf_belief <- dta %>% 
     group_by(d_treatment_source) %>% 
     select(y_belief_report_num) %>% 
     group_by(n_tot = n(), add = TRUE) %>%
     summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
     mutate(n = n_tot - n_na) %>% 
     mutate(se = sqrt(var/n),
-           ci.error = qt(0.975,df=n-1)*sd/sqrt(n),
+           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
            conf.low = mean - ci.error,
            conf.high = mean + ci.error) %>%
-    mutate(Group = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
-    mutate(outcome = "Belief") %>% 
-    mutate(outcome = str_to_title(outcome))
+    mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
+    mutate(respuesta = "Belief") %>% 
+    mutate(respuesta = str_to_title(respuesta))
 
-# Plot the data with ggplot
-  ggplot(dta_graf, aes(x=outcome,
+
+g_belief <- ggplot(dta_graf_belief, aes(x=respuesta,
                         y=mean, 
                         group=as.factor(d_treatment_source), 
                         color=as.factor(d_treatment_source))) + 
-      geom_point(position = position_dodge(0.4), size = 1.1) + # Add points
-      geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width=.3, # Add errorbar
+      geom_point(position = position_dodge(0.4), size = 1.1) + 
+      geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width=.3,
                      position = position_dodge(0.4), size = 0.7) +
-    labs(title = "(A) Outcome: Belief ", # Add lables
-         x = "", 
-         y = "Belief Report 1 (0-6)") +
-    scale_color_manual(values=c('red','blue'), # Add/modify legend
-                       labels = c("Nachrichten 360 (fake)", "Tagesschau (real)"),
-                       name = "Source treatment:")+
-    theme_light() + # Choose theme
-    theme(panel.grid.major.x = element_blank()) +
-    ylim(0, 6)
+    labs(title = "Belief") +
+    scale_color_manual(values=c('red','green'),
+                       labels = c("Fake", "Real"),
+                       name = "Tratamiento:")+
+    theme_light()
+
+# email
+dta_graf_email <- dta %>% 
+    group_by(d_treatment_source) %>% 
+    select(y_share_report_email_num) %>% 
+    group_by(n_tot = n(), add = TRUE) %>%
+    summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
+    mutate(n = n_tot - n_na) %>% 
+    mutate(se = sqrt(var/n),
+           ci.error = qt(0.90,df=n-1)*sd/sqrt(n),
+           conf.low = mean - ci.error,
+           conf.high = mean + ci.error) %>%
+    mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
+    mutate(respuesta = "Email") %>% 
+    mutate(respuesta = str_to_title(respuesta))
+
+
+g_email <- ggplot(dta_graf_email, aes(x=respuesta,
+                        y=mean, 
+                        group=as.factor(d_treatment_source), 
+                        color=as.factor(d_treatment_source))) + 
+      geom_point(position = position_dodge(0.4), size = 1.1) + 
+      geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width=.3,
+                     position = position_dodge(0.4), size = 0.7) +
+    labs(title = "Email") +
+    scale_color_manual(values=c('red','green'),
+                       labels = c("Fake", "Real"),
+                       name = "Tratamiento:")+
+    theme_light()
+
+# fb
+dta_graf_fb <- dta %>% 
+    group_by(d_treatment_source) %>% 
+    select(y_share_report_fb_num) %>% 
+    group_by(n_tot = n(), add = TRUE) %>%
+    summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
+    mutate(n = n_tot - n_na) %>% 
+    mutate(se = sqrt(var/n),
+           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
+           conf.low = mean - ci.error,
+           conf.high = mean + ci.error) %>%
+    mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
+    mutate(respuesta = "Facebook") %>% 
+    mutate(respuesta = str_to_title(respuesta))
+
+
+g_fb <- ggplot(dta_graf_fb, aes(x=respuesta,
+                        y=mean, 
+                        group=as.factor(d_treatment_source), 
+                        color=as.factor(d_treatment_source))) + 
+      geom_point(position = position_dodge(0.4), size = 1.1) + 
+      geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width=.3,
+                     position = position_dodge(0.4), size = 0.7) +
+    labs(title = "Facebook") +
+    scale_color_manual(values=c('red','green'),
+                       labels = c("Fake", "Real"),
+                       name = "Tratamiento:")+
+    theme_light()
+
+# twitter
+dta_graf_tw <- dta %>% 
+    group_by(d_treatment_source) %>% 
+    select(y_share_report_twitter_num) %>% 
+    group_by(n_tot = n(), add = TRUE) %>%
+    summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
+    mutate(n = n_tot - n_na) %>% 
+    mutate(se = sqrt(var/n),
+           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
+           conf.low = mean - ci.error,
+           conf.high = mean + ci.error) %>%
+    mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
+    mutate(respuesta = "Twitter") %>% 
+    mutate(respuesta = str_to_title(respuesta))
+
+
+g_tw <- ggplot(dta_graf_tw, aes(x=respuesta,
+                        y=mean, 
+                        group=as.factor(d_treatment_source), 
+                        color=as.factor(d_treatment_source))) + 
+      geom_point(position = position_dodge(0.4), size = 1.1) + 
+      geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width=.3,
+                     position = position_dodge(0.4), size = 0.7) +
+    labs(title = "Twitter") +
+    scale_color_manual(values=c('red','green'),
+                       labels = c("Fake", "Real"),
+                       name = "Tratamiento:")+
+    theme_light()
+
+# whatsapp
+dta_graf_wa <- dta %>% 
+    group_by(d_treatment_source) %>% 
+    select(y_share_report_whatsapp_num) %>% 
+    group_by(n_tot = n(), add = TRUE) %>%
+    summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
+    mutate(n = n_tot - n_na) %>% 
+    mutate(se = sqrt(var/n),
+           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
+           conf.low = mean - ci.error,
+           conf.high = mean + ci.error) %>%
+    mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
+    mutate(respuesta = "Whatsapp") %>% 
+    mutate(respuesta = str_to_title(respuesta))
+
+
+g_wa <- ggplot(dta_graf_wa, aes(x=respuesta,
+                        y=mean, 
+                        group=as.factor(d_treatment_source), 
+                        color=as.factor(d_treatment_source))) + 
+      geom_point(position = position_dodge(0.4), size = 1.1) + 
+      geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width=.3,
+                     position = position_dodge(0.4), size = 0.7) +
+    labs(title = "Whatsapp") +
+    scale_color_manual(values=c('red','green'),
+                       labels = c("Fake", "Real"),
+                       name = "Tratamiento:")+
+    theme_light()
+
+g_belief
+g_email
+g_fb
+g_tw
+g_wa
 ```
 
 
@@ -217,8 +336,10 @@ mediante pruebas t los efectos para cada una de las redes sociales.
 mod_belief <- lm(y_belief_report_num ~ d_treatment_source, data = dta)
 mod_email <- lm(y_share_report_email_num ~ d_treatment_source, data = dta)
 mod_fb <-  lm(y_share_report_fb_num ~ d_treatment_source, data = dta)
+mod_tw <-  lm(y_share_report_twitter_num ~ d_treatment_source, data = dta)
+mod_wa <-  lm(y_share_report_whatsapp_num ~ d_treatment_source, data = dta)
 
-stargazer(mod_belief, mod_email, mod_fb,
+stargazer(mod_belief, mod_email, mod_fb, mod_tw, mod_wa,
           type = "text")
 ```
 
@@ -234,8 +355,12 @@ mod_email_2 <- lm(y_share_report_email_num ~ d_treatment_source + x_education_nu
                    x_income_num, data = dta)
 mod_fb_2 <-  lm(y_share_report_fb_num ~ d_treatment_source + x_education_num +
                    x_income_num, data = dta)
+mod_tw_2 <-  lm(y_share_report_twitter_num ~ d_treatment_source + x_education_num +
+                   x_income_num, data = dta)
+mod_wa_2 <-  lm(y_share_report_whatsapp_num ~ d_treatment_source + x_education_num +
+                   x_income_num, data = dta)
 
-stargazer(mod_belief_2, mod_email_2, mod_fb_2,
+stargazer(mod_belief_2, mod_email_2, mod_fb_2, mod_tw_2, mod_wa_2,
           type = "text")
 ```
 
