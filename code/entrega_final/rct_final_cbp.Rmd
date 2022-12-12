@@ -1,0 +1,147 @@
+---
+title: "Entrega Final. Experimentos aleatorios"
+author: "Carlos Bautista"
+date: '2022-12-05'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+library()
+```
+
+**a. Artículo de Referencia**
+
+Bauer, Paul C, and Bernhard Clemm von Hohenberg. 2020. “Believing and
+Sharing Information by Fake Sources: An Experiment.”
+
+**b. Descripción General**
+
+En esta nueva era digital, uno de los mayores retos a los que la sociedad se
+enfrenta es la difusión de información o noticias falsas (fake news), cuyas causas
+y efectos en todos los ámbitos han sido poco estudiados.
+
+Uno de los aspectos de este fenómeno que falta por entender mejor es por qué
+y cuándo la gente cree en dicha información a partir de la naturaleza de sus
+fuentes.
+
+En este trabajo se realiza un experimento aleatorio para investigar el efecto de
+las fuentes de información (reales vs. falsas) y su contenido (congruentes vs. no
+congruentes con las actitudes de los individuos) sobre la posibilidad de creer en
+ellas e incluso compartirlas.
+
+Los autores encuentran que las personas tienen una mayor tendencia a creer y
+una propensión un poco mayor a compartir noticias cuando se refieren a fuentes
+reales, pero además, el impacto de la congruencia entre los hechos informados
+y la visión del mundo de los individuos también es significativo.
+
+Por ello, es mucho más probable que las personas crean en noticias de una fuente
+que les ha proporcionado previamente información congruente, que si la fuente
+proviende de una fuente falsa.
+
+**c. Análisis**
+
+La era digital ha facilitado aún mas la posibilidad de que cualquiera pueda acce-
+der y compartir información, independientemente de su veracidad o la seriedad
+de la fuente. Además, lo más común es que las personas no sepan ex ante si una
+noticia es verdadera y, por lo general, pocos se toman el tiempo para verificar
+los hechos.
+
+La pregunta principal del estudio es si las fuentes de información falsas se creen
+sustancialmente menos que las fuentes reales. El estudio contrasta esto expo-
+niendo a individuos en un experimento aleatorio a noticias verdaderas y falsas
+pero buscando cuantificar los efectos de la veracidad de la fuente y la credibilidad
+del contenido.
+
+Por ello, los autores han elegido las siguientes hipótesis de trabajo:
+
+1. Las personas tienden a creer más en las noticias de una fuente real que de
+una fuente falsa.
+
+
+2. Las personas serán más propensas a compartir informes de noticias que
+provienen de fuentes reales que aquellos que provienen de fuentes falsas.
+
+
+3. Las personas que vieron noticias congruentes (versus incongruentes) de
+una fuente tienen una mayor tendencia a creer y compartir noticias pos-
+teriores de la misma fuente.
+
+
+4. La diferencia en la creencia y en la propensión a compartir noticias poste-
+riores entre aquellos que vieron informes congruentes y aquellos que vieron
+informes incongruentes es mayor para la fuente falsa que para la fuente
+real
+
+El artículo de referencia muestra el procedimiento utilizado para verificar estas
+hipótesis, así como las principales conclusiones de un experimento realizado en
+Alemania. El anexo del documento (bastante extenso) muestra con detalle todos
+los elementos de dicho experimento.
+
+**d. Datos**
+
+El conjunto de datos es fake.csv. Dicho archivo contiene un subconjunto de
+los datos de Bauer y Clemm von Hohenberg (2020) que se utilizará para esta
+práctica. Los datos se basan en un experimento de encuesta en el que los indivi-
+duos fueron asignados aleatoriamente a dos versiones de un informe de noticias
+en el que solo se varió el nombre de la fuente (y el diseño).
+
+La mayoría de las variables tienen dos versiones donde una contiene valores
+numéricos (_num) y la otra contiene etiquetas descriptivas (_fac). Las variables
+de tratamiento generalmente se denominan d_..., las variables de resultado
+y_... y las covariables x_...
+
+**e. Instrucciones**
+
+**1.** Escriba una introducción del análisis que realizará con ayuda de este con-
+junto de datos de acuerdo al contexto del problema.
+
+**2.** Ilustre correctamente los factores considerados en dicho análisis. Para ello,
+realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
+detrás de la relación causal que busca analizar y cuantificar el artículo.
+
+**3.** Describa de manera general el diseño del experimento aleatorizado: parti-
+cipantes, variables de respuesta, clasificación de grupos de tratamiento y
+control y covariables. Mencione cómo se implementó el experimento en la
+práctica.
+
+**4.** Luego de leer el conjunto de datos, empiece por realizar el análisis ex-
+ploratorio de las variables y describa su comportamiento. Tome en cuenta
+que hay un grupo de variables numéricas y otras categóricas que deben ser
+descritas de manera particular de acuerdo a su naturaleza (ver apéndice
+2).
+
+**5.** Realice los cuadros de balance para verificar la aleatorización del experi-
+mento. Replique, en la medida de lo posible los cuadros del apéndice 3.
+Interprete sus resultados.
+
+**6.** Dado que los supuestos SUTVA e independencia son válidos, compare el
+resultado promedio en el tratamiento y el control mediante pruebas simples
+t. Para ello, en R puede utilizar la función t.test().
+
+**7.** Muestre gráficamente los efectos que tiene la fuente en la posibilidad de
+creer en las noticias y en la propensión a compartirlas. Esto es, replique
+los gráficos de la figura 3 (pág. 13). Interprete estos resultados y concluya
+en el contexto del problema de acuerdo a las hipótesis planteadas.
+
+**8.** Ahora obtenga estos mismos resultados pero implementando sus cálculos
+mediante la estimación adecuada de mínimos cuadrados ordinarios. Inclu-
+ya el análisis para la fuente, la congruencia de la misma y la posibilidad
+de la interacción. Esto es, replique los resultados de las tablas del anexo 9.
+¿Qué conclusión obtiene de ellas? Interprete sus resultados en el contexto
+del problema de acuerdo a las hipótesis del estudio. No olvide comparar
+mediante pruebas tlos efectos para cada una de las redes sociales.
+
+**9.** Hay dos covariables más aún no utilizadas (educación e ingreso). Realice
+algún análisis para identificar si tiene alguna significancia el incluirlas
+como controles.
+
+**10.** Escriba la conclusión general del análisis realizado. Interprete la cuanti-
+ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
+estrategia empírica seleccionada para la cuantificación del efecto causal.
+Deberá remitir su documento PDF con todo lo aquí solicitado así como el código
+o script en R para la obtención de los resultados.
+
