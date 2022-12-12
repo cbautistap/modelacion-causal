@@ -158,6 +158,7 @@ t. Para ello, en R puede utilizar la función t.test().
 ```{r}
 dta_resp <- c('y_belief_report_num', 'y_share_report_email_num', 
               'y_share_report_fb_num')
+
 lapply(dta[, dta_resp],
        function(v) {t.test(v ~ dta$d_treatment_source, var.equal = TRUE)})
 ```
@@ -169,7 +170,38 @@ los gráficos de la figura 3 (pág. 13). Interprete estos resultados y concluya
 en el contexto del problema de acuerdo a las hipótesis planteadas.
 
 ```{r}
+# Produce the data for the plot
+  dta_graf <- dta %>% 
+    group_by(d_treatment_source) %>% 
+    select(y_belief_report_num) %>% 
+    group_by(n_tot = n(), add = TRUE) %>%
+    summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
+    mutate(n = n_tot - n_na) %>% 
+    mutate(se = sqrt(var/n),
+           ci.error = qt(0.975,df=n-1)*sd/sqrt(n),
+           conf.low = mean - ci.error,
+           conf.high = mean + ci.error) %>%
+    mutate(Group = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
+    mutate(outcome = "Belief") %>% 
+    mutate(outcome = str_to_title(outcome))
 
+# Plot the data with ggplot
+  ggplot(dta_graf, aes(x=outcome,
+                        y=mean, 
+                        group=as.factor(d_treatment_source), 
+                        color=as.factor(d_treatment_source))) + 
+      geom_point(position = position_dodge(0.4), size = 1.1) + # Add points
+      geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width=.3, # Add errorbar
+                     position = position_dodge(0.4), size = 0.7) +
+    labs(title = "(A) Outcome: Belief ", # Add lables
+         x = "", 
+         y = "Belief Report 1 (0-6)") +
+    scale_color_manual(values=c('red','blue'), # Add/modify legend
+                       labels = c("Nachrichten 360 (fake)", "Tagesschau (real)"),
+                       name = "Source treatment:")+
+    theme_light() + # Choose theme
+    theme(panel.grid.major.x = element_blank()) +
+    ylim(0, 6)
 ```
 
 
