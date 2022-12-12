@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```{r}
 library(tidyverse)
 library(dagitty)
+library(stargazer)
+library(kableExtra)
 ```
 
 **a. Artículo de Referencia**
@@ -125,7 +127,8 @@ descritas de manera particular de acuerdo a su naturaleza (ver apéndice
 2).
 
 ```{r}
-
+dta <- read_csv("data/fake.csv")
+attach(dta)
 ```
 
 
@@ -134,7 +137,11 @@ mento. Replique, en la medida de lo posible los cuadros del apéndice 3.
 Interprete sus resultados.
 
 ```{r}
-
+dta_cov <- c('x_age', 'x_sex_num', 'x_income_num', 'x_education_num')
+dta %>% group_by(d_treatment_source) %>% 
+  select(one_of(dta_cov)) %>% 
+  summarise_all(funs(mean(., na.rm = TRUE))) %>% 
+  kable()
 ```
 
 
@@ -163,7 +170,7 @@ ya el análisis para la fuente, la congruencia de la misma y la posibilidad
 de la interacción. Esto es, replique los resultados de las tablas del anexo 9.
 ¿Qué conclusión obtiene de ellas? Interprete sus resultados en el contexto
 del problema de acuerdo a las hipótesis del estudio. No olvide comparar
-mediante pruebas tlos efectos para cada una de las redes sociales.
+mediante pruebas t los efectos para cada una de las redes sociales.
 
 ```{r}
 
