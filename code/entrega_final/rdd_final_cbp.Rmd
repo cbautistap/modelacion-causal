@@ -79,7 +79,20 @@ realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
 detrás de la relación causal que busca analizar y cuantificar el artículo.
 
 ```{r}
+dag_rdd <- dagitty('dag{
+                   "Score" [pos="0,1"]
+                   "Donaciones" [pos="1,1"]
+                   "corte" [pos="-1,1"]
+                   "Titular del cargo" [pos="0,0"]
+                   "Cov observables" [pos="0,2"]
+                   "Score" -> "Donaciones"
+                   "Score" -> "corte"
+                   "corte" -> "Titular del cargo"
+                   "Titular del cargo" -> "Donaciones"
+                   "Cov observables" -> "Score"
+                   "Cov observables" -> "Donaciones"}')
 
+plot(dag_rdd)
 ```
 
 
