@@ -189,16 +189,43 @@ sugeridas para ajustar el kernel de manera óptima y el grado polinomial
 de ajuste, así como los errores estándar robustos. Explique sus resultados.
 
 ```{r}
+# modelos de tabla 2
+m_p1 <- rdrobust(y = dv_money, x = rv) #grado del polinomio por default es 1
+m_p2 <- rdrobust(y = dv_money, x = rv, p=2)
 
+
+print(c("grado polinomio = 1",summary(m_p1)))
+print(c("grado polinomio = 2",summary(m_p2)))
 ```
+
+Se grafican los efectos (figura 13)
+
+```{r}
+#gráfica con todos los datos
+g_p1_all <- rdplot(y = dv_money, x = rv)
+#gráfica con diferencia de +-10
+g_p1 <- rdplot(y = dv_money, x = rv, 
+               x.lim = c(-10,10))
+
+g_p1_all
+g_p1
+```
+
 
 
 **9.** Ahora pruebe si puede encontrar algún efecto del tratamiento para los lí-
 mites de otros cortes diferentes del original (c = 0). Evalúe un par diferente
 a ellos y discuta. Compare con los resultados de la tabla 3.
 
-```{r}
+Siguiendo a Skovron y Titiunik (2015) probamos para puntos de corte de 1 y -3
 
+```{r}
+m_c1 <- rdrobust(y = dv_money, x = rv, c = 1) #grado del polinomio por default es 1
+m_c3 <- rdrobust(y = dv_money, x = rv, c = -3)
+
+
+print(c("corte placebo = 2",summary(m_c1)))
+print(c("corte placebo = -3",summary(m_c3)))
 ```
 
 
