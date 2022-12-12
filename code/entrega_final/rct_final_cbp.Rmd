@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```{r}
 library(tidyverse)
 library(dagitty)
+library(rethinking)
 library(stargazer)
 library(kableExtra)
 ```
@@ -99,14 +100,46 @@ y_... y las covariables x_...
 **1.** Escriba una introducción del análisis que realizará con ayuda de este con-
 junto de datos de acuerdo al contexto del problema.
 
-CBP
+El presente ejercicio tiene el objetivo de evaluar el efecto causal que tienen
+las fuentes de información falsas y reales en que la gente lo crea (o no), y su
+disposición a compartirlas.
+
+Para ello se utilizan datos de un experimento aleatorio conducido en Alemania
+por Bauer y Clemm (2015).
+
+Se pretende, en primer lugar, validar la aleatorización del experimento y 
+posteriormente medir el efecto causal ATE del tratamiento, según el diseño
+del experimento.
 
 **2.** Ilustre correctamente los factores considerados en dicho análisis. Para ello,
 realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
 detrás de la relación causal que busca analizar y cuantificar el artículo.
 
-```{r}
+Se genera DAG para la variable resultado `belief`, dado que la estructura será
+la misma para los diferentes variables resultado relacionadas con la disposición
+a compartir (email, facebook, twitter, whatsapp) que se evaluarán en las 
+secciones siguientes.
 
+```{r}
+dag_rct <- dagitty('dag{
+                   "Fuente" [pos="0.5,0"]
+                   "Creencia" [pos="1,0"]
+                   "Edad" [pos="0,1"]
+                   "Sexo" [pos="0,0.5"]
+                   "Ingreso" [pos="0,-1"]
+                   "Educación" [pos="0,-0.5"]
+                   "Fuente" -> "Creencia"
+                   "Edad" -> "Fuente"
+                   "Edad" -> "Creencia"
+                   "Sexo" -> "Fuente"
+                   "Sexo" -> "Creencia"
+                   "Ingreso" -> "Fuente"
+                   "Ingreso" -> "Creencia"
+                   "Educación" -> "Fuente"
+                   "Educación" ->  "Creencia"
+                   "Educación" -> "Ingreso"}')
+
+drawdag(dag_rct, col_arrow="red")
 ```
 
 
@@ -115,7 +148,7 @@ cipantes, variables de respuesta, clasificación de grupos de tratamiento y
 control y covariables. Mencione cómo se implementó el experimento en la
 práctica.
 
-CBP
+
 
 **4.** Luego de leer el conjunto de datos, empiece por realizar el análisis ex-
 ploratorio de las variables y describa su comportamiento. Tome en cuenta
