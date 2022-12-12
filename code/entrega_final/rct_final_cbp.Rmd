@@ -144,13 +144,22 @@ dta %>% group_by(d_treatment_source) %>%
   kable()
 ```
 
+T-test para covariables
+
+```{r}
+lapply(dta[, dta_cov],
+       function(v) {t.test(v ~ dta$d_treatment_source, var.equal=TRUE)})
+```
 
 **6.** Dado que los supuestos SUTVA e independencia son válidos, compare el
 resultado promedio en el tratamiento y el control mediante pruebas simples
 t. Para ello, en R puede utilizar la función t.test().
 
 ```{r}
-
+dta_resp <- c('y_belief_report_num', 'y_share_report_email_num', 
+              'y_share_report_fb_num')
+lapply(dta[, dta_resp],
+       function(v) {t.test(v ~ dta$d_treatment_source, var.equal = TRUE)})
 ```
 
 
