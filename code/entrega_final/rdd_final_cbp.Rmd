@@ -9,3 +9,98 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
+**a. Artículo de Referencia**
+
+Fouirnaies, Alexander, and Andrew B Hall. 2014. “The Financial Incumbency
+Advantage: Causes and Consequences.” J. Polit. 76 (3): 711–24.
+
+**b. Descripción General**
+
+Este artículo utiliza un diseño de regresión discontinua para estimar el efecto
+causal de la titularidad del cargo en las contribuciones de campaña en la Cámara
+de Representantes de los Estados Unidos y las legislaturas estatales.
+
+En ambos entornos, la titularidad en el cargo de un candidato provoca un au-
+mento de aproximadamente 20 a 25 puntos porcentuales en la proporción de
+donaciones que fluyen hacia el partido del titular.
+
+Si bien se demuestra que el tamaño de este efecto no varía con la experiencia del
+legislador y no parece depender de los beneficios de los titulares de cargos, sí se
+encuentra que el efecto es principalmente resultado de donaciones de grupos de
+interés, especialmente donantes de industrias sometidas a fuertes regulaciones.
+
+**c. Análisis**
+
+Las unidades de análisis son los Distritos (legislaturas estatales y de la Cámara
+de Representantes de los Estados Unidos. El tratamiento es el estatus de titular
+en la elección (El candidato es el titular del cargo: Sí = 1, No = 0) y el resultado
+serán las contribuciones de campaña en la elección (recibos de donaciones de
+campaña en el próximo ciclo electoral).
+
+La variable de score es el margen de ganancia de la participación del voto de-
+mócrata, es decir, la diferencia entre la participación demócrata del voto bipar-
+tidista y el 50 %, el porcentaje de voto necesario para ganar un cargo.
+
+Se busca analizar si las contribuciones de campaña donadas al partido en el
+próximo ciclo electoral en los distritos que apenas ganó difieren sistemáticamente
+de las donaciones que el partido recibe en los distritos que apenas perdió. Esta
+diferencia se puede atribuir al impacto de la titularidad en el cargo del candidato.
+
+**d. Datos**
+
+El conjunto de datos es incumbency.csv. Utilice en el análisis sólo la infor-
+mación para las elecciones legislativas estatales, esto es, 32,670 observaciones a
+nivel de distrito legislativo estatal.
+
+La variable de score es el margen de victoria demócrata en t en el distrito (el
+porcentaje de votos obtenido por el partido demócrata menos el porcentaje de
+votos obtenido por su oponente más fuerte), y el tratamiento es ganar la elección
+t. El Partido Demócrata gana las elecciones cuando su margen de victoria es
+positivo y pierde cuando es negativo.
+
+**e. Instrucciones**
+
+**1.** Escriba una introducción del análisis que realizará con ayuda de este con-
+junto de datos de acuerdo al contexto del problema.
+
+**2.** Ilustre correctamente los factores considerados en dicho análisis. Para ello,
+realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
+detrás de la relación causal que busca analizar y cuantificar el artículo.
+
+**3.** Luego de leer el conjunto de datos, seleccione la submuestra de las 32,670
+de elecciones locales y realice un análisis exploratorio de las variables y
+describa su comportamiento, especialmente la variable de score.
+
+**4.** Construya el diagrama de dispersión entre la variable de score (eje x) y la
+proporción de donaciones (eje y), distinguiendo cada punto por grupo de
+tratamiento y de control.
+
+**5.** Ahora revise el ejemplo empírico del artículo complementario (Skovron y
+Titiunik (2015), a partir de la página 31) que utiliza el mismo conjunto
+de datos del artículo de referencia y explique cuál es el punto de corte
+identificado para el análisis de una regresión discontinua. ¿Porqué sería
+útil esta estrategia empírica?
+
+**6.** Lleve a cabo el análisis de continuidad en el conjunto de datos. Replique
+en particular la Figura 11 para analizar dicha continuidad y explique sus
+conclusiones. En R puede utilizar la función rddensity.
+
+**7.** Ahora, analice el efecto del tratamiento en cinco covariables predetermina-
+das. Confirme que no encuentran ningún efecto del tratamiento en ninguna
+de ellas. Para ello, replique los resultados de la tabla 1 y los gráficos de la
+Figura 12. En R puede utilizar las funciones rdrobust y rdplot. Explique
+claramente sus conclusiones.
+
+**8.** Utilice las mismas funciones para identificar el efecto causal significativo
+sobre la variable de resultado. Ahora debe replicar los resultados de la
+tablas 2 y los gráficos de la figura 13. Vea en el artículo las opciones
+sugeridas para ajustar el kernel de manera óptima y el grado polinomial
+de ajuste, así como los errores estándar robustos. Explique sus resultados.
+
+**9.** Ahora pruebe si puede encontrar algún efecto del tratamiento para los lí-
+mites de otros cortes diferentes del original (c = 0). Evalúe un par diferente
+a ellos y discuta. Compare con los resultados de la tabla 3.
+
+**10.** Escriba la conclusión general del análisis realizado. Interprete la cuanti-
+ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
+estrategia empírica seleccionada para la cuantificación del efecto causal.
