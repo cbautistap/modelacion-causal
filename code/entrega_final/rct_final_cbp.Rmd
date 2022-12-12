@@ -214,7 +214,12 @@ del problema de acuerdo a las hipótesis del estudio. No olvide comparar
 mediante pruebas t los efectos para cada una de las redes sociales.
 
 ```{r}
+mod_belief <- lm(y_belief_report_num ~ d_treatment_source, data = dta)
+mod_email <- lm(y_share_report_email_num ~ d_treatment_source, data = dta)
+mod_fb <-  lm(y_share_report_fb_num ~ d_treatment_source, data = dta)
 
+stargazer(mod_belief, mod_email, mod_fb,
+          type = "text")
 ```
 
 
@@ -223,7 +228,15 @@ algún análisis para identificar si tiene alguna significancia el incluirlas
 como controles.
 
 ```{r}
+mod_belief_2 <- lm(y_belief_report_num ~ d_treatment_source + x_education_num +
+                   x_income_num, data = dta)
+mod_email_2 <- lm(y_share_report_email_num ~ d_treatment_source + x_education_num +
+                   x_income_num, data = dta)
+mod_fb_2 <-  lm(y_share_report_fb_num ~ d_treatment_source + x_education_num +
+                   x_income_num, data = dta)
 
+stargazer(mod_belief_2, mod_email_2, mod_fb_2,
+          type = "text")
 ```
 
 
