@@ -2,7 +2,9 @@
 title: "Entrega final. Regresión discontinua"
 author: "Carlos Bautista"
 date: '2022-08-12'
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -73,11 +75,17 @@ positivo y pierde cuando es negativo.
 **1.** Escriba una introducción del análisis que realizará con ayuda de este con-
 junto de datos de acuerdo al contexto del problema.
 
-CBP
+El presente ejercicio busca evaluar el efecto causal de la titularidad en el cargo
+en las donaciones a campañas de los congresos locales de EUA. Para medir el efecto
+se utilizará la metodología de regresión discontinua y se enfoca en las elecciones
+cerradas, de tal forma que esto funciona como si la titularidad del cargo hubiera
+sido asignada de manera aleatoria (para demócratas y republicanos).
 
 **2.** Ilustre correctamente los factores considerados en dicho análisis. Para ello,
 realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
 detrás de la relación causal que busca analizar y cuantificar el artículo.
+
+Se genera el DAG
 
 ```{r}
 dag_rdd <- dagitty('dag{
@@ -101,15 +109,33 @@ drawdag(dag_rdd, col_arrow="red")
 de elecciones locales y realice un análisis exploratorio de las variables y
 describa su comportamiento, especialmente la variable de score.
 
+El resumen estadístico para las variables numéricas de interés se muestra
+a continuación:
+
 ```{r}
 dta <- read_csv("data/incumbency.csv")
 dta <- dta %>% filter(statelevel == 1)
-#dta_short <- dta %>% select(statelevel, rv, dv_money, total_race_money, total_votes,
-#                      dem_inc, rep_inc, total_group_money, treat)
+dta_short <- dta %>% select(statelevel, rv, dv_money, total_race_money, total_votes,
+                      dem_inc, rep_inc, total_group_money, treat)
 attach(dta)
-#attach(dta_short)
+attach(dta_short)
 
-dta %>% select_if(is.numeric) %>% summary
+dta_short %>% select_if(is.numeric) %>% summary
+
+
+```
+
+También se genera resumen descriptivo para variables categóricas de interés, 
+y podemos observar cómo están distribuidas.
+
+```{r}
+dta_cat <- dta %>% select(dem_inc, rep_inc, treat)
+dta_cat$dem_inc <- as.factor(dta_cat$dem_inc)
+dta_cat$rep_inc <- as.factor(dta_cat$rep_inc)
+dta_cat$treat <- as.factor(dta_cat$treat)
+table(dta_cat$dem_inc)
+table(dta_cat$rep_inc)
+table(dta_cat$treat)
 ```
 
 
@@ -130,11 +156,26 @@ de datos del artículo de referencia y explique cuál es el punto de corte
 identificado para el análisis de una regresión discontinua. ¿Porqué sería
 útil esta estrategia empírica?
 
-El punto de corte es CERO. cbp ...
+El punto de corte es cero, este valor define si una observación forma parte del
+grupo de tratamiento o de control. 
+
+En términos del contexto del problema, recordemos que está basado en la variable
+score, que mide la diferencia en la votación y es el margen de victoria o derrota
+de un candidato demócrata en particular. Es decir, si el valor de score es 
+positivo implica que el candidato fue el ganador en dicho distrito, y viceversa.
+
+De tal forma que, al enfocarnos en elecciones cerradas, si el valor de score 
+es positivo entonces dicha observación forma parte del grupo de tratamiento, y si 
+es negativo del de control.
 
 **6.** Lleve a cabo el análisis de continuidad en el conjunto de datos. Replique
 en particular la Figura 11 para analizar dicha continuidad y explique sus
 conclusiones. En R puede utilizar la función rddensity.
+
+Siguiento a Skovron y Titiunik (2015) podemos validar el diseño del modelo
+analizando la densidad de la variable continua (margen de victoria del candidato
+demócrata) alrededor del punto de corte (0). Se genera histograma para analizar
+de manera visual
 
 ```{r}
 ggplot(dta, aes(x = rv, fill = as.factor(treat))) +
@@ -143,6 +184,11 @@ ggplot(dta, aes(x = rv, fill = as.factor(treat))) +
   xlim(-30, 30)
 ```
 
+Asimismo, podemos validar realizando una prueba de falsificación, para ello se
+utiliza la función `rddensity` para probar la hipótesis nula de que la densidad
+de la variable score es continua al punto de corte. La prueba nos arroja un p-value
+de 0.3594, por lo que no tenemos evidencia para rechazar que haya discontinuidad
+en el punto de corte. Podemos proceder con nuestro análisis de regresión discontinua.
 
 ```{r}
 density <- rddensity(X = rv)
@@ -155,6 +201,20 @@ das. Confirme que no encuentran ningún efecto del tratamiento en ninguna
 de ellas. Para ello, replique los resultados de la tabla 1 y los gráficos de la
 Figura 12. En R puede utilizar las funciones rdrobust y rdplot. Explique
 claramente sus conclusiones.
+
+El siguiente paso para validar nuestro análisis de RDD es analizar el efecto del
+tratamiento en las covariables de interés: 
+[-] Dinero total
+[-] Dinero de grupos con intereses
+[-] Total de votos
+[-] Titular del cargo es demócrata
+[-] Titular del cargo es republicano
+
+Esperaríamos que el tratamiento no tenga ningún efecto causal en las covariables.
+Para ello utilizamos la función `rdrobust`. Como se observa, los p-values robustos
+son altos y no significativos, por lo que no tenemos evidencia que el tratamiento
+tenga un efecto causal en alguna de las covariables de interés.
+
 
 ```{r}
 mod_1 <- rdrobust(y = total_race_money, x = rv)
@@ -170,6 +230,9 @@ print(c("dem_inc", summary(mod_4)))
 print(c("rep_inc", summary(mod_5)))
 ```
 
+Además, podemos validar esto de manera visual al graficar los resultados previos
+con `rdplot`. En las gráficas se observa que ninguna de las covariables 
+cambia de manera significativa alrededor del punto de corte = 0.
 
 ```{r}
 g1 <- rdplot(y = total_race_money, x = rv,
@@ -202,6 +265,16 @@ tablas 2 y los gráficos de la figura 13. Vea en el artículo las opciones
 sugeridas para ajustar el kernel de manera óptima y el grado polinomial
 de ajuste, así como los errores estándar robustos. Explique sus resultados.
 
+Ahora procedemos a evaluar el efecto causal del tratamiento sobre la variable
+de respuesta (donaciones a campañas). Con base en lo realizado por los autores,
+ajustamos el modelo con polinomios de grado 1 y de grado 2.
+
+Los resultados muestran que el tratamiento sí tiene un efecto causal en la
+variable de respuesta: en distritos con elecciones cerradas donde ganaron los
+demócratas, las donaciones en las próximas elecciones aumentan en un 20% en promedio
+vs los distritos con elecciones cerradas donde perdieron. Este resultado también
+es significativo para el modelo con polinomio de grado 2 (efecto de 19.9%).
+
 ```{r}
 # modelos de tabla 2
 m_p1 <- rdrobust(y = dv_money, x = rv) #grado del polinomio por default es 1
@@ -212,7 +285,10 @@ print(c("grado polinomio = 1",summary(m_p1)))
 print(c("grado polinomio = 2",summary(m_p2)))
 ```
 
-Se grafican los efectos (figura 13)
+Se grafican los efectos (figura 13) para confirmar de manera visual.
+En la primera gráfica se utilizan valores donde el margen de diferencia fue de
++-10 puntos y en la segunda gráfica se utilizan todas las elecciones.
+El efecto causal es evidente de manera visual en ambos casos.
 
 ```{r}
 #gráfica con todos los datos
@@ -231,7 +307,10 @@ g_p1
 mites de otros cortes diferentes del original (c = 0). Evalúe un par diferente
 a ellos y discuta. Compare con los resultados de la tabla 3.
 
-Siguiendo a Skovron y Titiunik (2015) probamos para puntos de corte de 1 y -3
+Siguiendo a Skovron y Titiunik (2015) probamos para puntos de corte de 1 y -3. 
+Las pruebas arrojan estimadores cercanos a cero (no hay diferencia en esos puntos
+de corte) los p-values no son significativos, por lo que no hay evidencia de que
+haya discontinuidad en los puntos de corte placebo.
 
 ```{r}
 m_c1 <- rdrobust(y = dv_money, x = rv, c = 1) #grado del polinomio por default es 1
@@ -246,3 +325,20 @@ print(c("corte placebo = -3",summary(m_c3)))
 **10.** Escriba la conclusión general del análisis realizado. Interprete la cuanti-
 ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
 estrategia empírica seleccionada para la cuantificación del efecto causal.
+
+El análisis de regresión discontinua muestra que, para el partido demócrata, 
+contar con la titularidad del cargo de elección popular en los congresos locales
+de EUA tiene en promedio un efecto positivo de 20% en las donaciones recibidas
+en la próxima elección, en comparación con los distritos donde no se ganó la
+elección (el titular no es demócrata).
+
+Esto se probó a través de un análisis de regresión discontinua, ya que fue posible
+identificar un punto de corte en la variable dependiente que permitió diseñar los
+grupos de tratamiento y control de manera robusta.
+
+Esto se validó a través de diferentes pruebas que mostraron que la discontinuidad
+no existía en el resto de covariables, sólo en la variable que genera el tratamiento.
+Además se validaron los resultados generando pruebas con puntos de corte placebo
+que efectivamente mostraron que el punto de corte es importante y significativo.
+Podemos entonces concluir que el efecto causal identificado existe y es significativo,
+y que el método utilizado es robusto.
