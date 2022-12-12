@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 
 ```{r}
 library(dagitty)
+library(rethinking)
 library(tidyverse)
 library(rdd)
 library(rdrobust)
@@ -92,7 +93,7 @@ dag_rdd <- dagitty('dag{
                    "Cov observables" -> "Score"
                    "Cov observables" -> "Donaciones"}')
 
-plot(dag_rdd)
+drawdag(dag_rdd, col_arrow="red")
 ```
 
 
