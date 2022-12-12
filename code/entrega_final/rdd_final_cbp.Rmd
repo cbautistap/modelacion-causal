@@ -113,14 +113,17 @@ de datos del artículo de referencia y explique cuál es el punto de corte
 identificado para el análisis de una regresión discontinua. ¿Porqué sería
 útil esta estrategia empírica?
 
-
+El punto de corte es CERO. cbp ...
 
 **6.** Lleve a cabo el análisis de continuidad en el conjunto de datos. Replique
 en particular la Figura 11 para analizar dicha continuidad y explique sus
 conclusiones. En R puede utilizar la función rddensity.
 
 ```{r}
-
+ggplot(dta, aes(x = rv, fill = as.factor(treat))) +
+  geom_histogram(binwidth = 0.7) +
+  geom_vline(xintercept = 0) +
+  xlim(-30, 30)
 ```
 
 
