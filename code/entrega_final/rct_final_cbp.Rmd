@@ -148,7 +148,7 @@ cipantes, variables de respuesta, clasificación de grupos de tratamiento y
 control y covariables. Mencione cómo se implementó el experimento en la
 práctica.
 
-
+CBP
 
 **4.** Luego de leer el conjunto de datos, empiece por realizar el análisis ex-
 ploratorio de las variables y describa su comportamiento. Tome en cuenta
@@ -156,11 +156,37 @@ que hay un grupo de variables numéricas y otras categóricas que deben ser
 descritas de manera particular de acuerdo a su naturaleza (ver apéndice
 2).
 
+Resumen estadístico de variables numéricas:
+
 ```{r}
 dta <- read_csv("data/fake.csv")
 attach(dta)
 
 dta %>% select_if(is.numeric) %>% summary()
+```
+
+Exploración de variables categóricas:
+
+```{r}
+t1 <- table(dta$y_belief_report_fac)
+t2 <- table(dta$y_share_report_email_fac)
+t3 <- table(dta$y_share_report_fb_fac)
+t4 <- table(dta$y_share_report_twitter_fac)
+t5 <- table(dta$y_share_report_whatsapp_fac)
+t6 <- table(dta$d_treatment_source)
+t7 <- table(dta$x_sex_fac)
+t8 <- table(dta$x_income_fac)
+t9 <- table(dta$x_education_fac)
+
+print(c("creencia", t1))
+print(c("email", t2))
+print(c("facebook", t3))
+print(c("twitter", t4))
+print(c("whatsapp", t5))
+print(c("tratamiento", t6))
+print(c("sexo", t7))
+print(c("ingresos", t8))
+print(c("educación", t9))
 ```
 
 
