@@ -143,6 +143,41 @@ Figura 12. En R puede utilizar las funciones rdrobust y rdplot. Explique
 claramente sus conclusiones.
 
 ```{r}
+mod_1 <- rdrobust(y = total_race_money, x = rv)
+mod_2 <- rdrobust(y = total_group_money, x = rv)
+mod_3 <- rdrobust(y = total_votes, x = rv)
+mod_4 <- rdrobust(y = dem_inc, x = rv)
+mod_5 <- rdrobust(y = rep_inc, x = rv)
+
+print(c("total_money", summary(mod_1)))
+print(c("total_group_money", summary(mod_2)))
+print(c("total_votes", summary(mod_3)))
+print(c("dem_inc", summary(mod_4)))
+print(c("rep_inc", summary(mod_5)))
+```
+
+
+```{r}
+g1 <- rdplot(y = total_race_money, x = rv,
+       x.lim = c(-10,10))
+g2 <- rdplot(y = total_group_money, x = rv,
+       x.lim = c(-10,10),
+       y.lim = c(0,200000))
+g3 <- rdplot(y = total_votes, x = rv,
+       x.lim = c(-10,10),
+       y.lim = c(0,50000))
+g4 <- rdplot(y = dem_inc, x = rv,
+       x.lim = c(-10,10),
+       y.lim = c(0, 1))
+g5 <- rdplot(y = rep_inc, x = rv,
+       x.lim = c(-10,10),
+       y.lim = c(0,1))
+
+g1
+g2
+g3
+g4
+g5
 
 ```
 
