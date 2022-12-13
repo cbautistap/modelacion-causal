@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(stargazer)
 library(dagitty)
+library(rethinking)
 library(AER)
 library(haven)
 library(kableExtra)
@@ -81,7 +82,26 @@ realice el gráfico directo acíclico (DAG) que muestre la teoría de cambio
 detrás de la relación causal que busca analizar y cuantificar el artículo.
 
 ```{r}
+dag_iv <- dagitty('dag{
+                   "Comercio esclavos" [pos="0.5,0"]
+                   "Confianza" [pos="1,0"]
+                   "Distancia al mar" [pos="0,0"]
+                   "Controles individuo" [pos="0,1"]
+                   "Controles distrito" [pos="0.5,1"]
+                   "Controles país" [pos="0,-1"]
+                   "Controles colonia" [pos="0.5,-1"]
+                   "Comercio esclavos" -> "Confianza"
+                   "Distancia al mar" -> "Comercio esclavos"
+                   "Controles individuo" -> "Comercio esclavos"
+                   "Controles individuo" -> "Confianza"
+                   "Controles distrito" -> "Comercio esclavos"
+                   "Controles distrito" -> "Confianza"
+                   "Controles país" -> "Comercio esclavos"
+                   "Controles país" -> "Confianza"
+                   "Controles colonia" -> "Comercio esclavos"
+                   "Controles colonia" -> "Confianza"}')
 
+drawdag(dag_iv, col_arrow="red")
 ```
 
 **3.** Luego de leer el conjunto de datos (21,822 observaciones), empiece por
@@ -90,7 +110,7 @@ miento. Tome en cuenta que hay un grupo de variables numéricas y otras
 categóricas que deben ser descritas de manera particular de acuerdo a su
 naturaleza.
 
-Se genera resumen estadístico de las variables numéricas:
+Se genera resumen estadístico de las variables:
 
 ```{r}
 dta <- read_dta("data/slavetrade.dta")
@@ -98,19 +118,46 @@ attach(dta)
 
 dta %>% select_if(is.numeric) %>% summary() 
 ```
-Resumen estadístico variables
-```{r}
-
-```
-
 
 **4.** Realice los gráficos de la distribución de algunas de las variables. Por
 ejemplo, elija: dos de las variables de confianza como resultados (trust
 in neighbours, trust in in the local council), la variable de trata-
-miento slave exports y la variable instrumental distance to the see.
+miento slave exports y la variable instrumental distance to the sea.
 Analice su comportamiento e interprete sus resultados.
 
+Respecto a la variable de confianza en los vecinos, la respuesta con mayor 
+respuesta (moda) fue la de nivel 2 ("somewhat). La respuesta que menos se contestó 
+fue la de confianza nivel 0 ("not at all").
+
+En el caso de la confianza en el "local council", la moda fue la confianza nivel
+3 ("a lot"), y la menos respondida fue nivel de confianza 0 ("not at all").
+
+Respecto a la variable del comercio de esclavos, observamos una distribución muy
+sesgada hacia la izquierda. Podemos observar que la gran mayoría del comercio
+de esclavos se movía en volúmenes de menos de 100 personas. Esto tiene sentido
+dado que lo que se transportaba eran personas y las limitaciones de transporte
+de la época (números de barcos y sus dimensiones determinadas).
+
+Sobre la variable instrumental, también se observa una distribución concentrada
+en valores bajos (aunque en menor magnitud que el comercio de esclavos), lo cual
+también tiene sentido dado que mide la distancia al mar de las villas donde
+habitaban mayoritariamente las etnias africanas, y las características geográficas
+del continente.
+
 ```{r}
+g_neig <- ggplot(dta, aes(x = trust_neighbors)) +
+  geom_histogram(binwidth = 1, colour='black', fill='white')
+g_lc <- ggplot(dta, aes(x = trust_local_council)) +
+  geom_histogram(binwidth = 1, colour='black', fill='dark green')
+g_exp <- ggplot(dta, aes(x = exports)) +
+  geom_histogram(bins = 50, colour='black', fill='red')
+g_dist <- ggplot(dta, aes(x = distsea)) +
+  geom_histogram(bins = 20, colour='black', fill='blue')
+
+g_neig
+g_lc
+g_exp
+g_dist
 
 ```
 
@@ -168,11 +215,32 @@ mclx <-
     coeftest(fm, vcovMCL)}
 ```
 
-Siguiendo a Nunn & Wantchekon, se calcula el primer modelo de regresión lineal,
-que busca medir el efecto del comercio de esclavos en la confianza de los africanos
-en sus **vecinos**.
+Siguiendo a Nunn & Wantchekon, se calcula el primer modelo de regresión lineal
+(incorporando los controles específicos),que busca medir el efecto del comercio
+de esclavos en la confianza de los africanos en sus **vecinos**.
+
 Para replicar la Tabla 1 se estima el mismo modelo pero evaluando con distintas
 transformaciones de la variable de tratamiento (comercio de esclavos):
+
+El primer modelo toma como variable independiente el volumen total de esclavos
+y como variable de respuesta el nivel de confianza reportando en sus vecinos,
+sin embargo por la magnitud de los valores que toma la var. dependiente  y dado que está
+muy fuertemente sesgada la izquierda (como vimos en el histograma anterior), se
+utilizan diversas transformaciones que buscan estandarizar esta variable.
+El segundo modelo toma las exportaciones estandarizadas por la extensión del área
+donde vivían la mayoría de las etnias; el tercer modelo las exportaciones
+estandarizadas por el la población histórica de cada etnia; el cuarto modelo
+toma el logaritmo natural de las exportaciones; el quinto, el logaritmo de las
+exportaciones estandarizado por la extensión territorial; y el sexto, el logaritmo
+de las exportaciones estandarizado por la población histórica.
+
+Los resultados para todas las variaciones de la exportación de esclavos muestran
+un efecto causal negativo y significativo en el nivel de confianza en los vecinos.
+Consistente con la hipótesis de los autores.
+
+Como señalan los autores, dado el potencial de correlación entre los residuales
+de los grupos, se ajustan los errores estándar robustos y de cluster utilizando
+las funciones de Arai (2015)
 
 ```{r}
 # Tabla 1, modelo 1 (M1.1). seleccionamos variables de interés
@@ -305,13 +373,19 @@ los resultados que obtuvo en este inciso con los del anterior.
 
 Siguiendo a los autores, se utilizará de aquí en adelante el modelo "base",
 que utiliza como variable de tratamiento al logaritmo natural de las 
-exportaciones de esclavos normalizadas por el área...
+exportaciones de esclavos normalizadas por la extensión territorial.
 Asimismo, para el resto de los ejercicios se utilizan los errores estándar robustos
 de etnia y distrito.
 
-Ahora se busca medir el efecto causal del comercio de esclavos sobre la
-confianza en "otros", que incluye 1, 2, 3... Es decir, cambiamos la variable 
-dependiente.
+Con ello, ahora se busca medir el efecto causal del comercio de esclavos sobre la
+confianza en "otros", que incluye:
+[-] Confianza en parientes
+[-] Confianza en gobierno local
+[-] Confianza al interior del grupo
+[-] Confianza entre grupos
+
+Es decir, en términos prácticos, evaluamos el modelo base cambiando la variable 
+de resultado.
 
 ```{r}
 # filtramos datos para obtener variables de interés. En este caso, podemos generar 
@@ -418,7 +492,8 @@ ee2_25 <- mclx(mod_25, 1, dta_25$murdock_name, dta_25$district)
 
 ```
 
-Se reportan resultados:
+Se reportan resultados y observamos que en el efecto causal sigue siendo negativo
+y es negativo para todos los distintos "tipos" de confianza evaluados.
 
 ```{r}
 stargazer(mod_21, mod_22, mod_23, mod_24, mod_25, type = "text",
@@ -431,12 +506,18 @@ stargazer(mod_21, mod_22, mod_23, mod_24, mod_25, type = "text",
                     keep = c("ln_export_area"))
 ```
 
-
 **7.** Analice la variable instrumental a detalle. Utilice regresiones de mínimos
 cuadrados ordinarios para revisar si el instrumento afecta a la variable
 de tratamiento slave exports. También revise si el instrumento afecta a
 cada una de las variables dependientes de confianza. Analice y discuta sus
 resultados.
+
+Al evaluar mediante MCO la relación entre la variable instrumental y las exportaciones
+de esclavos encontramos que el efecto sí es significativo y es negativo. Esto
+está en línea con nuestras expectativas, y nos dice que a mayor distancia 
+del mar, el número de exportaciones de la etnia específica es menor. Es un
+primer indicio de que podemos usar esta variable como instrumento del comercio 
+de esclavos, además, esperaríamos que no presente problemas de endogeneidad
 
 ```{r}
 iv_exports <- lm(exports ~ distsea, data = dta, na.action = na.omit)
@@ -445,7 +526,13 @@ iv_ln_export_area <- lm(ln_export_area ~ distsea, data = dta, na.action = na.omi
 stargazer(iv_exports, iv_ln_export_area, type = "text")
 ```
 
-Sí afecta, y es lo que esperamos. Compararemos contra el modelo más especificado
+También evaluamos de manera sencilla el instrumento con las variables de resultado
+y observamos que sí hay un efecto significativo, aunque de magnitud
+muy baja y cercana a cero, en todos los casos.
+Esto también está en línea con lo que esperamos.
+
+Compararemos más adelante vs el modelo mejor especificado, con controles y con
+uso correcto de instrumento.
 
 ```{r}
 iv_rel <- lm(trust_relatives ~ distsea, data = dta, na.action = na.omit)
@@ -463,6 +550,9 @@ dependientes mediante el uso de la variable instrumental. Ahora deberá
 replicar los resultados de la tabla 5 del artículo. Tome en cuanta cómo
 debe incorporar controles para cada especificación.
 
+Siguiendo lo realizado por los autores, calculamos la regresión de dos etapas
+mediante la función `iv_reg`, y se corrigen los errores estándar robustos y de cluster
+para comunidad y distrito.
 
 ```{r}
 dta_51 <- dta %>% select(trust_relatives, 
@@ -609,8 +699,8 @@ R. Interprete sus resultados y concluya en el contexto del problema.
 
 Calculamos estadístico F de la regresión de primera etapa y observamos que para 
 ambas variables de interés, `exports` y su transformación `ln_export_area`,
-el valor es significativamente mayor a 10. Por lo que podemos afirmar que es 
-un instrumento fuerte.
+el valor es significativamente mayor a 10. Por lo que podemos afirmar que
+no tenemos problemas de instrumento débil, es un instrumento fuerte.
 
 ```{r}
 #summary(mod_51, diagnostics = TRUE)
@@ -628,6 +718,30 @@ print(c(iv_test1$F, iv_test2$F))
 ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
 estrategia empírica seleccionada para la cuantificación del efecto causal.
 
+En la primera parte, al evaluar el efecto causal del comercio de esclavos en el 
+nivel de confianza actual de las etnias africanas mediante MCO encontramos que
+sí existe un efecto negativo y significativo. Sin embargo, hay sospechas de que
+el comercio de esclavos y el nivel de confianza pudieron haber estado afectados
+por una serie de covariables como las características de los individuos, de la 
+región, o de si los países estuvieron colonizados o no, además de variables
+omitidas, lo cual genera un problema de endogeneidad.
 
-Deberá remitir su documento PDF con todo lo aquí solicitado así como el código
-o script en R para la obtención de los resultados.
+Por ello, para medir de mejor manera este efecto se instrumentó el comercio de 
+esclavos con la distancia a la costa de la villa específica donde habitaban las
+etnias africanas durante los años de mayor auge del esclavismo. Esta variable
+reúne las características deseadas para instrumentar el comercio de esclavos:
+está correlacionado con las exportaciones (de manera negativa), pero no lo está
+con las características de los grupos étnicos y de la región que podrían afectar
+el nivel de confianza actual. Esta es la ventaja de utilizar esta técnica
+cuando nos enfrentamos a problemas de endogeneidad. Para asegurarnos de que el
+instrumento es válido, se hicieron las pruebas correspondientes.
+
+De esta forma, se calcula el modelo con variable instrumental para medir el efecto
+de interés de manera más consistente y válida, sin problemas de endogeneidad.
+Los resultados nos arrojan un efecto negativo y significativo del
+comercio de esclavos con el nivel de confianza actual, tanto en los vecinos como
+en "otros". Esto está en línea con las primeras estimaciones de MCO, más aún,
+es importante señalar, que incluso los coeficientes que arroja el modelo de 
+variables instrumentales es muy similar que el de MCO.
+
+
