@@ -497,8 +497,12 @@ ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
 estrategia empírica seleccionada para la cuantificación del efecto causal.
 
 El análisis mostró que sí existe un efecto causal en la creencia en noticias
-dependiendo de la naturaleza de la fuente de información (real o falsa). El 
-procedimiento para poder evaluar este fenómeno de manera consistente y no sesgada
+dependiendo de la naturaleza de la fuente de información (real o falsa). Además,
+al agregar controles de educación e ingreso se observa que solo el ingreso
+tiene un efecto significativo. Es decir, el nivel de educación también tiene un
+efecto en creer las noticias (reales o falsas) a partir de la fuente.
+
+El procedimiento para poder evaluar este fenómeno de manera consistente y no sesgada
 fue a través del diseño y la implementación de un experimento aleatorio donde la 
 asignación del tratamiento es justamente aleatorio y se compara sus resultados
 con un grupo de control (que no recibió el tratamiento).
@@ -514,5 +518,4 @@ del efecto causal (ATE) es relativamente sencilla, ya que consiste en medir
 las diferencias promedio en la variable de resultado para ambos grupos y probar
 que efectivamente dicha diferencia sea significativa.
 
-Es decir, el nivel de educación
-también tiene un efecto en creer
+Es decir, 
