@@ -2,7 +2,9 @@
 title: "Entrega Final. Experimentos aleatorios"
 author: "Carlos Bautista"
 date: '2022-12-05'
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -148,7 +150,22 @@ cipantes, variables de respuesta, clasificación de grupos de tratamiento y
 control y covariables. Mencione cómo se implementó el experimento en la
 práctica.
 
-CBP
+Los datos del experimento se obtuvieron a través de una encuesta en línea realizada
+entre el 14 y 29 de marzo de 2019 a ciudadanos alemanes mayores de 18 años.
+Se obtuvieron un total de 1980 respuestas, excluyendo a quienes no completaron 
+todo el cuestionario.
+
+El experimento consistió en exponer a los participantes a una lista de 11 nombres
+de medios de información que podían ser reales o inventados, asignados de manera 
+aleatoria. Posteriormente se les preguntó si conocían la fuente (medios) y partir
+de esto se les aplicó una serie de preguntas sobre que tanto confiaban en dichas
+fuentes. Además, se complementó la información con preguntas sobre si contaban
+con redes sociales (facebook, twitter, whatsapp) y su propensión a compartir los
+medios y noticias que observaron a través de dichas redes sociales.
+
+Asimismo, se incluyeron una serie de covariables relacionadas con las características
+del individuo (edad, sexo, ingresos, nivel educativo, etc.) y sobre su postura
+ante temas como migración y política.
 
 **4.** Luego de leer el conjunto de datos, empiece por realizar el análisis ex-
 ploratorio de las variables y describa su comportamiento. Tome en cuenta
@@ -194,6 +211,13 @@ print(c("educación", t9))
 mento. Replique, en la medida de lo posible los cuadros del apéndice 3.
 Interprete sus resultados.
 
+La tabla de balance para las covariables de interés, que compara las medias según su 
+pertenencia a grupo de tratamiento o contol, muestran que sí existe un equilibrio.
+No obstante, hay relatviamente mayores diferencias en las variables de edad y sexo.
+
+Para asegurarnos del balance podemos hacer las correspondientes pruebas T, que
+se muestran en el siguiente apartado
+
 ```{r}
 dta_cov <- c('x_age', 'x_sex_num', 'x_income_num', 'x_education_num')
 dta %>% group_by(d_treatment_source) %>% 
@@ -202,7 +226,11 @@ dta %>% group_by(d_treatment_source) %>%
   kable()
 ```
 
-T-test para covariables
+T-test para covariables:
+
+Con base en los valores p de la prueba no podemos rechazar la hipótesis nula de
+que la diferencia en las medias entre grupos (tratamiento y control) es igual a
+cero.
 
 ```{r}
 lapply(dta[, dta_cov],
@@ -212,6 +240,20 @@ lapply(dta[, dta_cov],
 **6.** Dado que los supuestos SUTVA e independencia son válidos, compare el
 resultado promedio en el tratamiento y el control mediante pruebas simples
 t. Para ello, en R puede utilizar la función t.test().
+
+Evaluamos el resultado promedio en los grupos tratamiento y control, considerando
+las diferentes variables de respuesta "y".
+
+Para el caso de la creencia, el efecto del tratamiento es significativo, con un valor
+p pequeño (prácticamente cero) que nos permite rechazar la hipótesis de que no hay
+diferencia en el valor promedio del grupo de tratamiento y control.
+
+En el caso de compartir las noticias por facebook, el efecto del tratamiento
+también es significativo. 
+
+Si elegimos un umbral de significancia de 95%, con whatsapp también es significativo
+el efecto. Por su parte, el efecto del tratamiento en compartir con email o
+twitter no es significativo.
 
 ```{r}
 dta_resp <- c('y_belief_report_num', 'y_share_report_email_num', 
@@ -228,6 +270,15 @@ creer en las noticias y en la propensión a compartirlas. Esto es, replique
 los gráficos de la figura 3 (pág. 13). Interprete estos resultados y concluya
 en el contexto del problema de acuerdo a las hipótesis planteadas.
 
+Podemos visualizar los resultados anteriores y verificamos los resultados.
+En las variables que son significativas los intervalos de confianza no se cruzan
+(rechazamos hipótesis nula), mientras que en las que no resultaron 
+significativas sí se cruzan (no podemos rechazar la H0).
+
+Nota. En el caso de twitter, observamos que el número de datos disminuye
+considerablemente (290 observaciones), por lo que puede estar afectando los
+resultados y la gráfica.
+
 ```{r}
 #belief
 dta_graf_belief <- dta %>% 
@@ -237,7 +288,7 @@ dta_graf_belief <- dta %>%
     summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
     mutate(n = n_tot - n_na) %>% 
     mutate(se = sqrt(var/n),
-           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
+           ci.error = qt(0.975,df=n-1)*sd/sqrt(n),
            conf.low = mean - ci.error,
            conf.high = mean + ci.error) %>%
     mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
@@ -266,7 +317,7 @@ dta_graf_email <- dta %>%
     summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
     mutate(n = n_tot - n_na) %>% 
     mutate(se = sqrt(var/n),
-           ci.error = qt(0.90,df=n-1)*sd/sqrt(n),
+           ci.error = qt(0.975,df=n-1)*sd/sqrt(n),
            conf.low = mean - ci.error,
            conf.high = mean + ci.error) %>%
     mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
@@ -295,7 +346,7 @@ dta_graf_fb <- dta %>%
     summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
     mutate(n = n_tot - n_na) %>% 
     mutate(se = sqrt(var/n),
-           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
+           ci.error = qt(0.975,df=n-1)*sd/sqrt(n),
            conf.low = mean - ci.error,
            conf.high = mean + ci.error) %>%
     mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
@@ -324,7 +375,7 @@ dta_graf_tw <- dta %>%
     summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
     mutate(n = n_tot - n_na) %>% 
     mutate(se = sqrt(var/n),
-           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
+           ci.error = qt(0.975,df=n-1)*sd/sqrt(n),
            conf.low = mean - ci.error,
            conf.high = mean + ci.error) %>%
     mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
@@ -353,7 +404,7 @@ dta_graf_wa <- dta %>%
     summarize_all(funs(mean, var, sd, n_na = sum(is.na(.))), na.rm = TRUE) %>% 
     mutate(n = n_tot - n_na) %>% 
     mutate(se = sqrt(var/n),
-           ci.error = qt(0.95,df=n-1)*sd/sqrt(n),
+           ci.error = qt(0.975,df=n-1)*sd/sqrt(n),
            conf.low = mean - ci.error,
            conf.high = mean + ci.error) %>%
     mutate(grupo = ifelse(d_treatment_source == 1, "Tratamiento", "Control")) %>%
@@ -390,6 +441,14 @@ de la interacción. Esto es, replique los resultados de las tablas del anexo 9.
 del problema de acuerdo a las hipótesis del estudio. No olvide comparar
 mediante pruebas t los efectos para cada una de las redes sociales.
 
+Al estimar medianto MCO obtenemos los resultados equivalentes, para las variables
+de resultado de creencia, facebook y whatsapp el efecto del tratamiento es 
+significativo al 95%, mientras que para email y twitter no lo es a dicho nivel
+de significancia.
+
+Nota. No encontré (o entendí del todo) la variable de congruencia, por lo que 
+no pude completar el modelo con la interacción.
+
 ```{r}
 mod_belief <- lm(y_belief_report_num ~ d_treatment_source, data = dta)
 mod_email <- lm(y_share_report_email_num ~ d_treatment_source, data = dta)
@@ -405,6 +464,16 @@ stargazer(mod_belief, mod_email, mod_fb, mod_tw, mod_wa,
 **9.** Hay dos covariables más aún no utilizadas (educación e ingreso). Realice
 algún análisis para identificar si tiene alguna significancia el incluirlas
 como controles.
+
+Se agregan como controles las covariables de educación e ingreso y se calculan
+nuevamente los 5 modelos en función de la variable resultado.
+
+Para el modelo base, cuya variable de respuesta es la creencia, el coeficiente
+sí es significativo al 95%, y el del ingreso no.
+
+En el resto de modelos, que miden la propensión a compartir las noticias
+mediante diversos canales y redes sociales, el efecto de educación e ingreso
+no es significativo a dicho nivel de 95%.
 
 ```{r}
 mod_belief_2 <- lm(y_belief_report_num ~ d_treatment_source + x_education_num +
@@ -426,6 +495,24 @@ stargazer(mod_belief_2, mod_email_2, mod_fb_2, mod_tw_2, mod_wa_2,
 **10.** Escriba la conclusión general del análisis realizado. Interprete la cuanti-
 ficación del efecto causal y discuta la utilidad y ventajas de aplicar la
 estrategia empírica seleccionada para la cuantificación del efecto causal.
-Deberá remitir su documento PDF con todo lo aquí solicitado así como el código
-o script en R para la obtención de los resultados.
 
+El análisis mostró que sí existe un efecto causal en la creencia en noticias
+dependiendo de la naturaleza de la fuente de información (real o falsa). El 
+procedimiento para poder evaluar este fenómeno de manera consistente y no sesgada
+fue a través del diseño y la implementación de un experimento aleatorio donde la 
+asignación del tratamiento es justamente aleatorio y se compara sus resultados
+con un grupo de control (que no recibió el tratamiento).
+
+Esta es una técnica muy poderosa ya que mediante la aleatorización del experimento
+se asegura que se cumplan los supuestos SUTVA e independencia. En ese sentido, 
+para proceder es importante verificar que los datos cumplan con esos supuestos
+mediante tablas de balance y pruebas t que aseguren que no existen diferencias
+significativas entre los grupos de control y tratamiento.
+
+Una vez validado lo anterior, la ventaja de utilizar este método es que la medición
+del efecto causal (ATE) es relativamente sencilla, ya que consiste en medir
+las diferencias promedio en la variable de resultado para ambos grupos y probar
+que efectivamente dicha diferencia sea significativa.
+
+Es decir, el nivel de educación
+también tiene un efecto en creer
